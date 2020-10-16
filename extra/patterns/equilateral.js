@@ -1,4 +1,3 @@
-let size;
 function createEquilateral(size){
     for(var i=1;i<=size;i++){
        for(var s=size-1;s>=i;s--){
