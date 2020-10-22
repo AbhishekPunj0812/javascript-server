@@ -1,49 +1,53 @@
 let users = [
     {
     traineeEmail: 'trainee1@successive.tech',
-    reviewerEmail: 'reviewer1@successive.tech',
+    reviewerEmail: 'reviewer1@successive.te',
     },
     {
     traineeEmail: 'trainee2@successive.tech',
-    reviewerEmail: 'reviewer2@succesive1.tech',
+    reviewerEmail: 'reviewer2@sucssive.tech',
+    },
+    {
+        traineeEmail: 'trainee2@successive.tech',
+        reviewerEmail: 'reviewer2@successive.tech',
     }
     ];
-    
     function validateEmail(email){
     let pattern = /^([a-zA-Z0-9\.-]+)@(successive).(tech)$/;
-    if(pattern.test(email))
-    {
-        return true;
+    if(pattern.test(email)){
+    return true;
     }
-    else
-    {
-        return false;
+    else{
+    return false;
     }
     }
-    
-    function validateUsers(users)
-    {
+    function validateUsers(users){
     let valid = 0;
     let invalid = 0;
     users.forEach(element => {
-    if(validateEmail(element.traineeEmail) === true){
-    console.log("Valid user :", element.traineeEmail);
+    const {traineeEmail, reviewerEmail} = element;
+    if(validateEmail(traineeEmail) === true && validateEmail(reviewerEmail) === true){  
+    console.log("Valid user :", traineeEmail);
+    console.log("Valid user :", reviewerEmail);
     valid=valid+1;
-    }else{
-    console.log("InValid user :", element.traineeEmail);
+    }else{  
+        if(validateEmail(reviewerEmail) !== true){
+        console.log("inValid user :", reviewerEmail);
+        
+        }else{
+        console.log("Valid user :", reviewerEmail);
+        }
+        if(validateEmail(traineeEmail) !== true){
+            console.log("inValid user :", traineeEmail);
+            
+            }else{
+            console.log("Valid user :", traineeEmail);
+        }
     invalid = invalid+1;
     }
-    if(validateEmail(element.reviewerEmail) === true){
-    console.log("Valid user :", element.reviewerEmail);
-    valid=valid+1;
-    }else{
-    console.log("InValid user :", element.reviewerEmail);
-    invalid = invalid+1;
-    }
+
     });
     console.log("Number of valid user",valid);
     console.log("Number of Invalid user", invalid);
     }
-    
     validateUsers(users);
-    
