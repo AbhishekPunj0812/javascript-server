@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/AbhishekPunj0812/javascript-server#readme",
   "dependencies": {
+  }
+	"devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/node": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
