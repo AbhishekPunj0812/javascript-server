@@ -1,8 +1,8 @@
 import { validateEmail } from './helper';
-    export function validateUsers(users) {
+    export function validateUsers(users: { traineeEmail: string; reviewerEmail: string; }[]): void {
     let valid = 0;
     let invalid = 0;
-    users.forEach((element: { traineeEmail: any; reviewerEmail: any; }) => {
+    users.forEach((element: { traineeEmail: string; reviewerEmail: string; }) => {
     const {traineeEmail, reviewerEmail} = element;
     if (validateEmail(traineeEmail) === true && validateEmail(reviewerEmail) === true) {
     console.log('Valid user :', traineeEmail);

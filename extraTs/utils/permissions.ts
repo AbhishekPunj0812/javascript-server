@@ -1,21 +1,15 @@
-// tslint:disable-next-line:one-line
-export default function hasPermission(moduleName, role, permissionType){
-    let type;
+export default function hasPermission(moduleName: { all: string; read: string; write: string; Delete: string; }, role: string, permissionType: string): boolean {
+    let type: string ;
     const { all, read, write, Delete } = moduleName;
-    // tslint:disable-next-line: triple-equals
-    if (permissionType == 'all')
+    if (permissionType === 'all')
         type = all;
-    // tslint:disable-next-line: triple-equals
-    if (permissionType == 'read')
+    if (permissionType === 'read')
         type = read;
-    // tslint:disable-next-line: triple-equals
-    if (permissionType == 'write')
+    if (permissionType === 'write')
         type = write;
-    // tslint:disable-next-line: triple-equals
-    if (permissionType == 'Delete')
+    if (permissionType === 'Delete')
         type = Delete;
-    // tslint:disable-next-line: triple-equals
-    if (role == 'head-trainer') {
+    if (role === 'head-trainer') {
         return true;
     }
     else {
