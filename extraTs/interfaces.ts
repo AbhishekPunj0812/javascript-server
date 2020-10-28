@@ -7,3 +7,8 @@ interface IPuser {
   };
 }
 export { IPuser };
+interface IUsers {
+  traineeEmail: string;
+  reviewerEmail: string;
+}
+export{ IUsers };
