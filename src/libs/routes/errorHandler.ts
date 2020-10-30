@@ -4,11 +4,11 @@ export default(err: IError, req: Request, res: Response, next: NextFunction) => 
     if (res.headersSent) {
         return next(err);
       }
-    res.status(404).json(
+    res.status(err.code).json(
         {
             error: err.error,
             message: err.message || 'error',
-            status: err.code,
+            status: err.code || 500,
             timestamp: new Date()
         }
     );
