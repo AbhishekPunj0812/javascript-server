@@ -6,7 +6,7 @@ const TraineeRouter = Router();
 
 TraineeRouter.route('/')
     .get(TraineeController.get)
-    .post(TraineeController.post)
+    .post(TraineeController.create)
     .put(TraineeController.update)
     .delete(TraineeController.delete);
 
