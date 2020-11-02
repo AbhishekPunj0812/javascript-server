@@ -17,7 +17,7 @@ class Server {
         this.app.use('/health-check', ( req, res, next) => {
               res.send('I am Ok');
         });
-        this.app.use('/api', routes);
+         this.app.use('/api', routes);
         this.app.use(notFoundHandler);
         this.app.use(errorHandler);
          return this;
