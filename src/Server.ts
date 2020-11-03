@@ -8,13 +8,13 @@ class Server {
          this.app = express();
     }
     bootstrap() {
+        this.initBodyParser();
     this.setupRoutes();
-    this.initBodyParser();
     return this;
     }
     public setupRoutes() {
          const { app } = this;
-        this.app.use('/health-check', ( req, res, next) => {
+         app.use('/health-check', ( req, res, next) => {
               res.send('I am Ok');
         });
         this.app.use('/api', routes);
@@ -23,7 +23,7 @@ class Server {
          return this;
     }
     public initBodyParser() {
-        this.app.use(bodyParser.json({ type: 'application/*+json' }));
+        this.app.use(bodyParser.json());
     }
     run() {
         const { app, config: { PORT } } = this;
