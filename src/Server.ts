@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { notFoundHandler, errorHandler } from './libs/routes';
 import routes from './router';
+import Database from './libs/Database';
 class Server {
     app;
     constructor(private config) {
@@ -27,6 +28,10 @@ class Server {
     }
     run() {
         const { app, config: { PORT } } = this;
+        Database.open('mongodb://localhost:27017/express-training')
+        .then((res) => {
+            console.log('Successfully connected to Mongo');
+        } );
         app.listen(PORT , ( err )  => {
             if ( err ) {
                  console.log( err );
