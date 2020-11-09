@@ -12,21 +12,16 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
       const values = obj.in.map( ( val ) => {
           return req[ val ][ key ];
       });
-
+      const paramvalue = values.find((val) => {
+         return isNull(val);
+      });
       // Checking for In i.e Body or Query
       console.log('body is', req[obj.in]);
       console.log('body', Object.keys( req[obj.in] ).length );
-      if (Object.keys( req[obj.in] ).length === 0) {
-          errors.push({
-              message: `Values should be passed through ${obj.in}`,
-              status: 400
-          });
-      }
-
       // Checking for required
       console.log('values is' , values);
       if (obj.required) {
-          if (isNull(values[0])) {
+          if (isNull(paramvalue)) {
               errors.push({
                   message: `${key} is required`,
                   status: 404
@@ -34,7 +29,7 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
           }
       }
       if (obj.string) {
-          if ( !( typeof ( values[0] ) === 'string' ) ) {
+          if ( !( typeof ( paramvalue ) === 'string' ) ) {
               errors.push({
                   message: `${key} Should be a String`,
                   status: 404
@@ -51,7 +46,7 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
       }
       if (obj.regex) {
           const regex = obj.regex;
-          if (!regex.test(values[0])) {
+          if (!regex.test(paramvalue)) {
               errors.push({
                   message: `${key} is not valid expression` ,
                   status: 400,
@@ -59,19 +54,22 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
           }
       }
       if (obj.default) {
-          if ( values[0] === '' ) {
+          if ( paramvalue === '' ) {
              // tslint:disable-next-line:no-unused-expression
-             values[0] === obj.default;
+             paramvalue === obj.default;
           }
       }
       if (obj.number) {
-          if (isNaN(values[0]) || values[0] === undefined) {
+          if (isNaN(paramvalue) || paramvalue === undefined) {
               errors.push({
                   message: `${key}  must be an number` ,
                   status: 400,
               });
           }
       }
+      if (obj.custom && typeof obj.custom === 'function') {
+        obj.custom(values);
+    }
 
   });
   if (errors.length > 0) {
@@ -83,6 +81,6 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
 };
 
 function isNull( obj ) {
-  const a = ( obj === undefined || obj === null );
+  const a = ( obj === undefined || obj === null || obj === '' );
   return a;
 }
