@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from 'express';
+
 class TraineeController {
     instance: TraineeController;
     static instance: any;
@@ -9,7 +11,7 @@ class TraineeController {
       return TraineeController.instance;
     }
 
-    get(req, res, next) {
+    get(req: Request, res: Response, next: NextFunction) {
       try {
         console.log('Inside get method of Trainee Controller');
       res.send({
@@ -31,7 +33,7 @@ class TraineeController {
       }
     }
 
-    create(req, res, next) {
+    create(req: Request, res: Response, next: NextFunction) {
       try {
         console.log('Inside post method of Trainee Controller');
         res.send({
@@ -48,7 +50,7 @@ class TraineeController {
       }
     }
 
-    update(req, res, next) {
+    update(req: Request, res: Response, next: NextFunction) {
       try {
         console.log('Inside update method of Trainee Controller');
 
@@ -66,7 +68,7 @@ class TraineeController {
       }
     }
 
-   delete(req , res , next) {
+   delete(req: Request, res: Response, next: NextFunction) {
       try {
         console.log('Inside delete method of Trainee Controller');
         res.send({
