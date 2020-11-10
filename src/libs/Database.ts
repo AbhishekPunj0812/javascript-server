@@ -1,6 +1,8 @@
 import { rejects } from 'assert';
 import * as mongoose from 'mongoose';
 import { resolve } from 'path';
+import seedData  from '../libs/seedData';
+
 
 class Database {
     static open(MONGO_URL) {
@@ -14,7 +16,8 @@ class Database {
                reject(err);
                return;
            } else {
-           resolve(undefined);
+               seedData();
+             resolve(undefined);
            }
         });
     }); }
