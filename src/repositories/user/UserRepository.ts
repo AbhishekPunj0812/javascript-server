@@ -5,6 +5,9 @@ import IUserModel from './IUserModel';
 import { idText } from 'typescript';
 
 export default class UserRepository {
+    static count() {
+        throw new Error('Method not implemented.');
+    }
 
     public static generateObjectId() {
         return String(mongoose.Types.ObjectId());

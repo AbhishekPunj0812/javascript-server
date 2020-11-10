@@ -20,6 +20,9 @@ else {
   throw error;
 
 }
+if ( !decodedUser ) {
+  throw error;
+}
 
 }
 catch (err) {

@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import  * as jwt from 'jsonwebtoken';
+import { userModel } from '../../repositories/user/UserModel';
 class UserController {
     instance: UserController;
     static instance: any;
@@ -71,6 +73,47 @@ class UserController {
       } catch (err) {
         console.log('Inside err', err);
       }
+    }
+
+    login(req: Request , res: Response , next: NextFunction) {
+      try { const { email, password } = req.body;
+      userModel.findOne ( { email }, (err, result) => {
+          if ( result ) {
+              if ( password === result.password ) {
+                  console.log('result is', result.password);
+                  const token = jwt.sign({
+                      result
+                  }, 'qwertyuiopasdfghjklzxcvbnm123456');
+                  console.log( token );
+                  res. send( {
+                      data: result,
+                      message: 'Login Permitted',
+                      status: 200
+                  });
+              }
+              else {
+                  res.send ( {
+                      message: 'id doesnt match',
+                      status: 400
+                  });
+              }
+          } else {
+              res.send ( {
+                  message: ' Email is not registered ',
+                  status: 404
+              });
+          }
+      });
+      }
+      catch ( err ) {
+          res.send( err );
+      }
+
+    }
+    me( req: Request, res: Response, next: NextFunction) {
+        res.json( {
+            // data
+        });
     }
 
    delete(req: Request , res: Response , next: NextFunction) {
