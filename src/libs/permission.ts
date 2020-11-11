@@ -1,13 +1,18 @@
-function hasPermission(moduleName, role, permissionType) {
-    if (!moduleName.hasOwnProperty(permissionType)) {
-        return false;
-    }
-    else if (moduleName[permissionType].includes(role) || role === 'head-trainer') {
-        return true;
+import { permissions } from './Constants';
 
-    }
+function hasPermission(module: string, role: string, permissionType: string) {
+const modulepermission = permissions[module];
+    if (!modulepermission) {
+    return false;
+}
+    if (modulepermission.all.includes(role)) {
+    return true;
+}
+    if (modulepermission[permissionType] && modulepermission[permissionType].includes(role)) {
+    return true;
+}
     else {
-        return false;
-    }
+    return false;
+}
 }
 export { hasPermission };
