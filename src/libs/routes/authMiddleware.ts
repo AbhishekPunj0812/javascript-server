@@ -1,9 +1,9 @@
 import  * as jwt from 'jsonwebtoken';
 import { hasPermission } from '../../libs/permission';
 import { permissions } from '../../libs/constants';
-import { error } from 'console';
+import { NextFunction, Request, Response } from 'express';
 
-export default (module, permissionType ) => (req, res, next) => {
+export default (module: string, permissionType: string ) => (req: Request, res: Response, next: NextFunction) => {
   try {
 
 console.log('The config is', module, permissionType);
@@ -12,12 +12,12 @@ const token = req.headers.authorization;
 
 const decodedUser = jwt.verify(token, 'qwertyuiopasdfghjklzxcvbnm123456');
 console.log('User', decodedUser);
-if (hasPermission(permissions.getUser, decodedUser.role, permissionType)) {
+if (hasPermission(module, decodedUser.role, permissionType)) {
   console.log(decodedUser.role + 'has permission' + permissionType, true);
   next();
 }
 else {
-  throw error;
+  throw new Error('Unauthorized');
 
 }
 
