@@ -9,7 +9,7 @@ import  authMiddleWwre from '../../libs/routes/authMiddleware';
 traineeRouter.route('/')
     .get(authMiddleWwre('getUser', 'read'), validationHandler( validation.get), TraineeController.get)
     .post(authMiddleWwre('getUser', 'write'), validationHandler( validation.create ), TraineeController.create)
-    .put(authMiddleWwre('getUser', 'update'), validationHandler(validation.update ), TraineeController.update)
+    .put(authMiddleWwre('getUser', 'update'), validationHandler(validation.update ), TraineeController.update);
     traineeRouter.route('/:id').delete(validationHandler( validation.delete ), TraineeController.delete);
 
 

@@ -1,15 +1,18 @@
 import { permissions } from './Constants';
 
-function hasPermission(getUser, role, permissionType) {
-    if (!getUser.hasOwnProperty(permissionType)) {
-        return false;
-    }
-    else if (getUser[permissionType].all.includes(role)) {
-        return true;
-
-    }
+function hasPermission(module: string, role: string, permissionType: string) {
+const modulepermission = permissions[module];
+    if (!modulepermission) {
+    return false;
+}
+    if (modulepermission.all.includes(role)) {
+    return true;
+}
+    if (modulepermission[permissionType] && modulepermission[permissionType].includes(role)) {
+    return true;
+}
     else {
-        return false;
-    }
+    return false;
+}
 }
 export { hasPermission };
