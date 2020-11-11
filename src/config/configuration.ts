@@ -1,7 +1,5 @@
 import * as dotenv from 'dotenv';
 console.log(dotenv);
-import * as secret_key from 'secret-key';
-console.log(secret_key);
 
 import { Iconfig } from './IConfig';
 
