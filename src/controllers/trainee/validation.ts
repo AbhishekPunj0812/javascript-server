@@ -16,7 +16,6 @@ const config = {
   regex: '',
   in: ['body'],
   errorMessage: 'Name is required',
-  }
   },
   delete:
   {

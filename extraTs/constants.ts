@@ -1,4 +1,5 @@
 import { IPuser } from './interfaces';
+import { IUsers } from './interfaces';
 export let permission: IPuser = {
     'getUsers': {
     all: ['head-trainer'],
@@ -6,7 +7,7 @@ export let permission: IPuser = {
     write : ['trainer'],
     Delete: []
     } };
-export let users = [
+export let users: IUsers[] = [
     {
     traineeEmail: 'trainee1@successive.tech',
     reviewerEmail: 'reviewer1@successive.te',
