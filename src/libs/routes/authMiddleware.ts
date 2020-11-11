@@ -1,7 +1,6 @@
 import  * as jwt from 'jsonwebtoken';
 import { hasPermission } from '../../libs/permission';
 import { permissions } from '../../libs/constants';
-import { error } from 'console';
 import { NextFunction, Request, Response } from 'express';
 
 export default (module: string, permissionType: string ) => (req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +17,7 @@ if (hasPermission(module, decodedUser.role, permissionType)) {
   next();
 }
 else {
-  throw error;
+  throw new Error('Unauthorized');
 
 }
 
