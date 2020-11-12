@@ -1,6 +1,4 @@
-import { rejects } from 'assert';
 import * as mongoose from 'mongoose';
-import { resolve } from 'path';
 
 class Database {
     static open(MONGO_URL) {
@@ -19,7 +17,11 @@ class Database {
         });
     }); }
     static disconnect() {
-        console.log('inside disconnect method');
+        mongoose.disconnect(() => {
+            console.log('MongoDB connection close');
+          }, err => {
+            console.log(err);
+          });
     }
 }
 export default Database;
