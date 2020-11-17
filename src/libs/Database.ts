@@ -1,5 +1,8 @@
 import * as mongoose from 'mongoose';
 
+import seedData  from '../libs/seedData';
+
+
 class Database {
     static open(MONGO_URL) {
         // tslint:disable-next-line:no-shadowed-variable
@@ -12,15 +15,14 @@ class Database {
                reject(err);
                return;
            } else {
-           resolve(undefined);
+               seedData();
+             resolve(undefined);
            }
         });
     }); }
     static disconnect() {
         mongoose.disconnect(() => {
             console.log('MongoDB connection close');
-          }, err => {
-            console.log(err);
           });
     }
 }
