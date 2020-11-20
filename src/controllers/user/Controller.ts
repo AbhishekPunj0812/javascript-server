@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import  * as jwt from 'jsonwebtoken';
 import { userModel } from '../../repositories/user/UserModel';
+import config from '../../config/configuration';
 class UserController {
     instance: UserController;
     static instance: any;
