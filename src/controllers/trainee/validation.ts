@@ -17,7 +17,7 @@ const config = {
   in: ['body'],
   errorMessage: 'Name is required',
   }
-  },
+},
   delete:
   {
   id:

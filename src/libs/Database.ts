@@ -1,6 +1,5 @@
-import { rejects } from 'assert';
 import * as mongoose from 'mongoose';
-import { resolve } from 'path';
+
 import seedData  from '../libs/seedData';
 
 
@@ -22,7 +21,9 @@ class Database {
         });
     }); }
     static disconnect() {
-        console.log('inside disconnect method');
+        mongoose.disconnect(() => {
+            console.log('MongoDB connection close');
+          });
     }
 }
 export default Database;

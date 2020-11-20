@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 console.log(dotenv);
+
 import { Iconfig } from './IConfig';
 
 // tslint:disable-next-line:no-var-requires
