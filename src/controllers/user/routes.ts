@@ -9,7 +9,7 @@ userRouter.route('/')
 .get(validationHandler( validation.get), UserController.get)
 .post( validationHandler( validation.create ), UserController.create)
 .put(validationHandler(validation.update ), UserController.update);
- userRouter.route('/:id').delete(validationHandler( validation.delete ), UserController.delete);
+ userRouter.route('/:id').delete(validationHandler( validation.delete ), UserController.remove);
 
 //  userRouter.route('/me')
 //  .get(authMiddleware ( validation.get, 'all'), UserController.me);
