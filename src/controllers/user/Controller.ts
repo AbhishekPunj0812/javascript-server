@@ -83,7 +83,7 @@ class UserController {
                   console.log('result is', result.password);
                   const token = jwt.sign({
                       result
-                  }, 'qwertyuiopasdfghjklzxcvbnm123456');
+                  }, config.SECRET_KEY);
                   console.log( token );
                   res. send( {
                       data: result,
