@@ -13,6 +13,8 @@ userRouter.route('/')
 
 //  userRouter.route('/me')
 //  .get(authMiddleware ( validation.get, 'all'), UserController.me);
+ userRouter.route('/me');
+ // .get(authMiddleware ( validation.get, 'all'), UserController.me);
  userRouter.route('/login')
  .post(validationHandler(validation.login), UserController.login);
 export default userRouter;
