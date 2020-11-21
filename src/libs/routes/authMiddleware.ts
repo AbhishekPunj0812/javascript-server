@@ -21,7 +21,6 @@ else {
 
 }
 if ( !decodedUser ) {
-
   throw new Error('Unauthoriesd');
 
 }

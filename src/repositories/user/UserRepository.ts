@@ -5,10 +5,9 @@ import IUserModel from './IUserModel';
 import { idText } from 'typescript';
 
 export default class UserRepository {
-    static count() {
-        throw new Error('Method not implemented.');
+    public count() {
+        return userModel.countDocuments();
     }
-
     public static generateObjectId() {
         return String(mongoose.Types.ObjectId());
     }
@@ -34,7 +33,5 @@ export default class UserRepository {
     //     console.log('UserRepository :: update' , data);
     //     return userModel.update(data);
     // }
-    public count() {
-        return userModel.countDocuments();
-    }
+
 }

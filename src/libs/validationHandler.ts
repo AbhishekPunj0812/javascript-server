@@ -13,15 +13,15 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
           return req[ val ][ key ];
       });
       const paramvalue = values.find((val) => {
-         return isNull(val);
+         return !isNull(val);
       });
       // Checking for In i.e Body or Query
       console.log('body is', req[obj.in]);
       console.log('body', Object.keys( req[obj.in] ).length );
       // Checking for required
       console.log('values is' , values);
-      if (obj.required) {
-          if (!isNull(paramvalue)) {
+     if (obj.required) {
+          if (isNull(paramvalue)) {
               errors.push({
                   message: `${key} is required`,
                   status: 404
@@ -29,7 +29,7 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
           }
       }
       if (obj.string) {
-          if ( ( typeof ( paramvalue ) === 'string' ) ) {
+          if (! ( typeof ( paramvalue ) === 'string' ) ) {
               errors.push({
                   message: `${key} Should be a String`,
                   status: 404
