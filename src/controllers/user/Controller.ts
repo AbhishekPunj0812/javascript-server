@@ -83,11 +83,11 @@ class UserController {
               if ( password === result.password ) {
                   console.log('result is', result.password);
                   const token = jwt.sign({
-                      result
+                      ...result.toObject()
                   }, config.SECRET_KEY);
                   console.log( token );
                   res. send( {
-                      data: result,
+                      data: { ...result.toObject(), token },
                       message: 'Login Permitted',
                       status: 200
                   });

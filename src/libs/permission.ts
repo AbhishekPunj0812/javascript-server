@@ -1,6 +1,7 @@
 import { permissions } from './Constants';
 
 function hasPermission(module: string, role: string, permissionType: string) {
+    console.log('permissionRole', module, role, permissionType);
 const modulepermission = permissions[module];
     if (!modulepermission) {
     return false;
