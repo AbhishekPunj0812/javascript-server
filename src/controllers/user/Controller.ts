@@ -86,18 +86,18 @@ class UserController {
               if ( password === result.password ) {
                   console.log('result is', result.password);
                   const token = jwt.sign({
-                      result
+                      ...result.toObject()
                   }, config.SECRET_KEY);
                   console.log( token );
                   res. send( {
-                      data: result,
+                      data: { ...result.toObject(), token },
                       message: 'Login Permitted',
                       status: 200
                   });
               }
               else {
                   res.send ( {
-                      message: 'id doesnt match',
+                      message: "password doesn't match",
                       status: 400
                   });
               }
@@ -114,11 +114,10 @@ class UserController {
       }
 
     }
-    me( req: Request, res: Response, next: NextFunction) {
-        res.json( {
-            // data
-        });
+    me (req: IRequest, res: Response, next: NextFunction) {
+      res.json(req.user);
     }
+
 
     public async remove(req: IRequest, res: Response, next: NextFunction) {
       const  id  = req.params.id;
@@ -139,6 +138,25 @@ class UserController {
       });
   }
 
+
+   delete(req: Request , res: Response , next: NextFunction) {
+      try {
+        console.log('User delete method of Trainee Controller');
+        res.send({
+          message: 'User deleted successfully',
+          data: [
+            {
+                name: 'User1',
+              },
+              {
+                  name: 'User2',
+              }
+          ]
+        });
+      } catch (err) {
+        console.log('Inside err', err);
+      }
+    }
 
   }
 
