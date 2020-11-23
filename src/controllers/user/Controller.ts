@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import  * as jwt from 'jsonwebtoken';
 import { userModel } from '../../repositories/user/UserModel';
+import IRequest from '../../IRequest';
 import config from '../../config/configuration';
 class UserController {
     instance: UserController;
@@ -94,7 +95,7 @@ class UserController {
               }
               else {
                   res.send ( {
-                      message: 'id doesnt match',
+                      message: "password doesn't match",
                       status: 400
                   });
               }
@@ -111,11 +112,10 @@ class UserController {
       }
 
     }
-    me( req: Request, res: Response, next: NextFunction) {
-        res.json( {
-            // data
-        });
+    me (req: IRequest, res: Response, next: NextFunction) {
+      res.json(req.user);
     }
+
 
    delete(req: Request , res: Response , next: NextFunction) {
       try {

@@ -2,10 +2,11 @@ import  * as jwt from 'jsonwebtoken';
 import { hasPermission } from '../../libs/permission';
 import { permissions } from '../../libs/constants';
 import { config } from '../../config';
+import IRequest from '../../IRequest';
 import { NextFunction, Request, Response } from 'express';
 import { userModel } from '../../repositories/user/UserModel';
 
-export default (module: string, permissionType: string ) => (req: Request, res: Response, next: NextFunction) => {
+export default (module: string, permissionType: string ) => (req: IRequest, res: Response, next: NextFunction) => {
   try {
 
 console.log('The config is', module, permissionType);
@@ -28,6 +29,7 @@ userModel.findOne({ email: decodedUser.email }, (err, result) => {
   }
   if (hasPermission(module, decodedUser.role, permissionType)) {
     console.log(decodedUser.role + 'has permission' + permissionType, true);
+    req.user = decodedUser;
     next();
   }
   else {
