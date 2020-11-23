@@ -1,15 +1,15 @@
 const config = {
     create:
     {
-    id: {
-    required: true,
-    string: true,
-    in: ['body'],
-    custom(): (value: any) => void {
-    console.log( 'value' );
-    throw { error: 'Error Occured', message: 'Message' };
-    }
-    },
+    // id: {
+    // required: true,
+    // string: true,
+    // in: ['body'],
+    // custom(): (value: any) => void {
+    // console.log( 'value' );
+    // throw { error: 'Error Occured', message: 'Message' };
+    // }
+    // },
     name: {
     required: true,
     string: true,
@@ -56,5 +56,17 @@ const config = {
     custom(dataToUpdate) {},
     }
     },
+    login: {
+        email: {
+            required: true,
+            string: true,
+            in: ['body']
+        },
+        password: {
+            required: true,
+            string: true,
+            in: ['body']
+        }
+    }
     };
     export default config;

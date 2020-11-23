@@ -8,19 +8,19 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
     const keys = Object.keys( config );
     keys.forEach((key) => {
       const obj = config[key];
-      console.log('key is' , key);
+      console.log('key is' , keys);
       const values = obj.in.map( ( val ) => {
           return req[ val ][ key ];
       });
       const paramvalue = values.find((val) => {
-         return isNull(val);
+         return !isNull(val);
       });
       // Checking for In i.e Body or Query
       console.log('body is', req[obj.in]);
       console.log('body', Object.keys( req[obj.in] ).length );
       // Checking for required
       console.log('values is' , values);
-      if (obj.required) {
+     if (obj.required) {
           if (isNull(paramvalue)) {
               errors.push({
                   message: `${key} is required`,
@@ -29,7 +29,7 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
           }
       }
       if (obj.string) {
-          if ( !( typeof ( paramvalue ) === 'string' ) ) {
+          if (! ( typeof ( paramvalue ) === 'string' ) ) {
               errors.push({
                   message: `${key} Should be a String`,
                   status: 404

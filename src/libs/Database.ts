@@ -15,7 +15,7 @@ class Database {
                reject(err);
                return;
            } else {
-               seedData();
+             seedData();
              resolve(undefined);
            }
         });
