@@ -44,8 +44,7 @@ class UserController {
       const creator = req.userData._id;
 
       const user = new UserRepository();
-      await user.createUser({ id, email, name, role, password }, creator)
-          .then(() => {
+    await user.createUser({ id, email, name, role, password }, creator);
               res.send({
                   message: 'User Created Successfully!',
                   data: {
@@ -57,26 +56,25 @@ class UserController {
                   },
                   code: 200
               });
-          });
   }
 
   public async update(req: IRequest, res: Response, next: NextFunction) {
     const { id, dataToUpdate } = req.body;
     const updator = req.userData._id;
     const user = new UserRepository();
-    await user.updateUser( id, dataToUpdate, updator)
-    .then((result) => {
+    try {
+    await user.updateUser( id, dataToUpdate, updator);
         res.send({
             message: 'User Updated',
             code: 200
         });
-    })
-    .catch ((err) => {
+      }
+    catch (err) {
         res.send({
             error: 'User Not Found for update',
             code: 404
         });
-    });
+    }
 }
 
     login(req: Request , res: Response , next: NextFunction) {
@@ -123,19 +121,19 @@ class UserController {
       const  id  = req.params.id;
       const remover = req.userData._id;
       const user = new UserRepository();
-      await user.deleteData(id, remover)
-      .then((result) => {
+      try {
+      await user.deleteData(id, remover);
           res.send({
               message: 'Deleted successfully',
               code: 200
           });
-      })
-      .catch ((err) => {
+        }
+      catch (err) {
           res.send({
               message: 'User not found to be deleted',
               code: 404
           });
-      });
+      }
   }
 
 
