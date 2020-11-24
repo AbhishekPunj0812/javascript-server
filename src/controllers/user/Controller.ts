@@ -3,6 +3,7 @@ import  * as jwt from 'jsonwebtoken';
 import { userModel } from '../../repositories/user/UserModel';
 import config from '../../config/configuration';
 import IRequest from '../../libs/routes/IRequest';
+import * as bcrypt from 'bcrypt';
 import UserRepository from '../../repositories/user/UserRepository';
 class UserController {
     instance: UserController;
@@ -15,7 +16,7 @@ class UserController {
       return UserController.instance;
     }
 
-    get(req: Request, res: Response, next: NextFunction): void {
+    public async get(req: Request, res: Response, next: NextFunction) {
       try {
         console.log('Inside get method of User Controller');
       res.send({
@@ -44,7 +45,7 @@ class UserController {
       const creator = req.userData._id;
 
       const user = new UserRepository();
-      await user.createUser({ id, email, name, role, password }, creator)
+      await user.create({ id, email, name, role, password }, creator)
           .then(() => {
               res.send({
                   message: 'User Created Successfully!',
@@ -79,11 +80,11 @@ class UserController {
     });
 }
 
-    login(req: Request , res: Response , next: NextFunction) {
+    login(req: IRequest , res: Response , next: NextFunction) {
       try { const { email, password } = req.body;
       userModel.findOne ( { email }, (err, result) => {
           if ( result ) {
-              if ( password === result.password ) {
+              if ( password === config.Password ) {
                   console.log('result is', result.password);
                   const token = jwt.sign({
                       ...result.toObject()

@@ -1,6 +1,9 @@
 import * as mongoose from 'mongoose';
 
 export default class VersionableRepository<D extends mongoose.Document, M extends mongoose.Model<D>> {
+    find(query: any) {
+        throw new Error('Method not implemented.');
+    }
     private model: M;
 
     constructor(model) {
@@ -19,7 +22,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return this.model.findOne(query).lean();
     }
 
-    public createUser(data: any, creator): Promise<D> {
+    public async createUser(data: any, creator): Promise<D> {
         const id = VersionableRepository.generateObjectId();
 
         const modelData = {
@@ -29,70 +32,60 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             _id: id,
         };
 
-        return this.model.create(modelData);
+        return await this.model.create(modelData);
     }
 
     public getUser(data: any) {
         return this.model.findOne(data);
     }
 
-    public update(id: string, dataToUpdate: any, updator) {
+    public async update(id: string, dataToUpdate: any, updator) {
 
-        return new Promise((resolve, reject) => {
-            let originalData;
-            this.findOne({ id: ( id ), updatedAt: undefined, deletedAt: undefined }).lean()
-                .then((data) => {
-                    if (data === null) {
-                        throw '';
-                    }
-                    originalData = data;
-                    const newId = VersionableRepository.generateObjectId();
-                    const oldId = originalData._id;
-                    const oldModel = {
-                        ...originalData,
-                        updatedAt: Date.now(),
-                        updatedBy: updator,
-                        deletedAt: Date.now(),
-                        deletedBy: updator,
-                    };
+        let originalData;
 
-                    const newData = Object.assign(JSON.parse(JSON.stringify(originalData)), dataToUpdate);
+        await this.findOne({ id: id, updatedAt: undefined, deletedAt: undefined })
+            .then((data) => {
+                if (data === null) {
+                    throw 'Record Not Found';
+                }
+                originalData = data;
+                const newId = VersionableRepository.generateObjectId();
+                const oldId = originalData._id;
+                const oldModel = {
+                    ...originalData,
+                    updatedAt: Date.now(),
+                    updatedBy: updator,
+                    deletedAt: Date.now(),
+                    deletedBy: updator,
+                };
 
-                    newData._id = newId;
-                    newData.createdAt = Date.now();
+                const newData = Object.assign(JSON.parse(JSON.stringify(originalData)), dataToUpdate);
 
-                    this.model.updateOne({ _id: oldId }, oldModel)
-                        .then((res) => {
-                            if (res === null) {
-                                throw '';
-                            }
-                        })
-                        .catch((err) => {
-                            reject(err);
-                        });
+                newData._id = newId;
+                newData.createdAt = Date.now();
 
+                this.model.updateOne({ _id: oldId }, oldModel)
+                    .then((res) => {
+                        if (res === null) {
+                            throw 'Unable to update';
+                        }
+                    })
+                    .catch((err) => {
+                        console.log('Error: ', err);
+                    });
                     this.model.create(newData);
-
-                    resolve(undefined);
-
-                })
-                .catch((err) => {
-                    reject(err);
-                });
 
         });
 
-    }
+            }
+    public async delete(id: string, remover: string) {
 
-    public delete(id: string, remover: string) {
-
-        return new Promise((resolve, reject) => {
             let originalData;
 
-            this.findOne({ id: ( id ), deletedAt: undefined }).lean()
+    await this.findOne({ id: ( id ), deletedAt: undefined }).lean()
                 .then((data) => {
                     if (data === null) {
-                        throw '';
+                        throw 'Record not found';
                     }
 
                     originalData = data;
@@ -107,18 +100,12 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
                     this.model.updateOne({ _id: oldId }, modelDelete)
                         .then((res) => {
                             if (res === null) {
-                                throw '';
+                                throw 'Unable to Update';
                             }
                         })
                         .catch((err) => {
-                            reject(err);
+                            console.log('Error: ', err);
                         });
-                    resolve(undefined);
-
-                })
-                .catch((err) => {
-                    reject(err);
                 });
-        });
     }
 }
