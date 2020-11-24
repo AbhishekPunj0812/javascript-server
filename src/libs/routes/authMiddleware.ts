@@ -2,7 +2,7 @@ import  * as jwt from 'jsonwebtoken';
 import { hasPermission } from '../../libs/permission';
 import { permissions } from '../../libs/constants';
 import { config } from '../../config';
-import IRequest from '../../IRequest';
+import IRequest from '../../libs/routes/IRequest';
 import { NextFunction, Request, Response } from 'express';
 import { userModel } from '../../repositories/user/UserModel';
 

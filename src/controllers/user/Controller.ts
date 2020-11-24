@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import  * as jwt from 'jsonwebtoken';
 import { userModel } from '../../repositories/user/UserModel';
-import IRequest from '../../IRequest';
 import config from '../../config/configuration';
+import IRequest from '../../libs/routes/IRequest';
+import UserRepository from '../../repositories/user/UserRepository';
 class UserController {
     instance: UserController;
     static instance: any;
@@ -38,44 +39,43 @@ class UserController {
       }
     }
 
-    create(req: Request, res: Response, next: NextFunction) {
-      try {
-        console.log('Inside post method of User Controller');
+    public async create(req: IRequest, res: Response, next: NextFunction) {
+      const { id, email, name, role, password } = req.body;
+      const creator = req.userData._id;
+
+      const user = new UserRepository();
+    await user.createUser({ id, email, name, role, password }, creator);
+              res.send({
+                  message: 'User Created Successfully!',
+                  data: {
+                      'id': id,
+                      'name': name,
+                      'email': email,
+                      'role': role,
+                      'password': password
+                  },
+                  code: 200
+              });
+  }
+
+  public async update(req: IRequest, res: Response, next: NextFunction) {
+    const { id, dataToUpdate } = req.body;
+    const updator = req.userData._id;
+    const user = new UserRepository();
+    try {
+    await user.updateUser( id, dataToUpdate, updator);
         res.send({
-          message: 'User created successfully',
-          data: [
-            {
-              name: 'User1',
-            },
-            {
-                name: 'User2',
-            }
-          ]
+            message: 'User Updated',
+            code: 200
         });
-      } catch (err) {
-        console.log('Inside err', err);
       }
-    }
-
-    update(req: Request, res: Response, next: NextFunction) {
-      try {
-        console.log('Inside update method of User Controller');
-
-      res.send({
-          message: 'User updated successfully',
-          data: [
-            {
-                name: 'User1',
-              },
-              {
-                  name: 'User2',
-              }
-          ]
+    catch (err) {
+        res.send({
+            error: 'User Not Found for update',
+            code: 404
         });
-      } catch (err) {
-        console.log('Inside err', err);
-      }
     }
+}
 
     login(req: Request , res: Response , next: NextFunction) {
       try { const { email, password } = req.body;
@@ -115,6 +115,26 @@ class UserController {
     me (req: IRequest, res: Response, next: NextFunction) {
       res.json(req.user);
     }
+
+
+    public async remove(req: IRequest, res: Response, next: NextFunction) {
+      const  id  = req.params.id;
+      const remover = req.userData._id;
+      const user = new UserRepository();
+      try {
+      await user.deleteData(id, remover);
+          res.send({
+              message: 'Deleted successfully',
+              code: 200
+          });
+        }
+      catch (err) {
+          res.send({
+              message: 'User not found to be deleted',
+              code: 404
+          });
+      }
+  }
 
 
    delete(req: Request , res: Response , next: NextFunction) {
