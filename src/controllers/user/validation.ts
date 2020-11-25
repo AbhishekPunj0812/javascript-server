@@ -25,7 +25,7 @@ const config = {
     },
     email: {
         required: true,
-        regex: /^[a-zA-Z0-9+_.-]+@successivetech+$/,
+        regex: /^[a-zA-Z0-9+_.-]+@successive.tech+$/,
         in: ['body'],
         errorMessage: 'email error',
     },
@@ -57,6 +57,12 @@ const config = {
     number: true,
     in: ['query'],
     errorMessage: 'Limit is invalid', }
+    },
+    sort: {
+        required: false,
+        boolean: true,
+        in: ['query'],
+        errorMessage: 'Sort is invalid',
     },
     update:
     {

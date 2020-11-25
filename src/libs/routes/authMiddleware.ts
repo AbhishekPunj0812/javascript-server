@@ -34,8 +34,10 @@ userModel.findOne({ email: decodedUser.email }, (err, result) => {
   }
   else {
     console.log('error');
-    throw new Error('Unauthorized');
-
+    next({
+      error: 'Unauthorized',
+      code: 403
+    });
   }
 });
 }

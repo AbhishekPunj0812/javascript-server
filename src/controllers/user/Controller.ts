@@ -16,7 +16,7 @@ class UserController {
       return UserController.instance;
     }
 
-    public async get(req: Request, res: Response, next: NextFunction) {
+    public async get(req: IRequest, res: Response, next: NextFunction) {
       try {
         console.log('Inside get method of User Controller');
       res.send({
@@ -39,17 +39,54 @@ class UserController {
         });
       }
     }
+    public async getAll(req: IRequest, res: Response, next: NextFunction) {
+      let skip: number;
+      let limit: number;
+      let sort: boolean;
+
+      if ('limit' in req.query) {
+          limit = Number(req.query.limit);
+      } else {
+          limit = 10;
+      }
+      if ('skip' in req.query) {
+          skip = Number(req.query.limit);
+      } else {
+          skip = 0;
+      }
+      if ('sort' in req.query) {
+          sort = true;
+      } else {
+          sort = false;
+      }
+
+      const user = new UserRepository();
+      await user.getallTrainee(skip, limit, sort)
+      .then((data) => {
+          res.status(200).send({
+              message: 'Trainees fetched successfully',
+              'count': data[1],
+              'data':   data
+          });
+      })
+      .catch((err) => {
+          res.send({
+              message : 'Unable to fetch Trainees',
+              status : 404
+          });
+      });
+  }
 
     public async create(req: IRequest, res: Response, next: NextFunction) {
       const { id, email, name, role, password } = req.body;
-      const creator = req.userData._id;
+      const creator = req.user._id;
 
       const user = new UserRepository();
       await user.create({ id, email, name, role, password }, creator);
               res.send({
                   message: 'User Created Successfully!',
                   data: {
-                      'id': id,
+                      // 'id': id,
                       'name': name,
                       'email': email,
                       'role': role,
@@ -61,7 +98,7 @@ class UserController {
 
   public async update(req: IRequest, res: Response, next: NextFunction) {
     const { id, dataToUpdate } = req.body;
-    const updator = req.userData._id;
+    const updator = req.user._id;
     const user = new UserRepository();
     try {
     await user.updateUser( id, dataToUpdate, updator);
@@ -86,7 +123,7 @@ class UserController {
                   console.log('result is', result.password);
                   const token = jwt.sign({
                       ...result.toObject()
-                  }, config.SECRET_KEY);
+                  }, config.SECRET_KEY, {expiresIn: Math.floor(Date.now() / 1000) + (15 * 60)});
                   console.log( token );
                   res. send( {
                       data: { ...result.toObject(), token },

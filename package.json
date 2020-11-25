@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/AbhishekPunj0812/javascript-server#readme",
   "dependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/mongoose": "^5.7.37",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
