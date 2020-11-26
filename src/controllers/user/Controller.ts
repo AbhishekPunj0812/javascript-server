@@ -86,7 +86,6 @@ class UserController {
               res.send({
                   message: 'User Created Successfully!',
                   data: {
-                      // 'id': id,
                       'name': name,
                       'email': email,
                       'role': role,
@@ -115,9 +114,10 @@ class UserController {
     }
 }
 
-    login(req: IRequest , res: Response , next: NextFunction) {
-      try { const { email, password } = req.body;
-      userModel.findOne ( { email }, (err, result) => {
+  public async login(req: IRequest , res: Response , next: NextFunction) {
+      try {
+        const { email, password } = req.body;
+     await userModel.findOne ( { email }, (err, result) => {
           if ( result ) {
               if ( password === config.Password ) {
                   console.log('result is', result.password);
