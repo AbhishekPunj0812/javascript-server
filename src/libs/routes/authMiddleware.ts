@@ -29,7 +29,7 @@ userModel.findOne({ email: decodedUser.email }, (err, result) => {
   }
   if (hasPermission(module, decodedUser.role, permissionType)) {
     console.log(decodedUser.role + 'has permission' + permissionType, true);
-    req.user = decodedUser;
+    req.user = result;
     next();
   }
   else {

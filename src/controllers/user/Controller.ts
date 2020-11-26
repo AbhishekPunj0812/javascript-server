@@ -85,7 +85,8 @@ class UserController {
               if ( password === config.Password ) {
                   console.log('result is', result.password);
                   const token = jwt.sign({
-                      ...result.toObject()
+                        id: result._id,
+                        email: result.email
                   }, config.SECRET_KEY);
                   console.log( token );
                   res. send( {

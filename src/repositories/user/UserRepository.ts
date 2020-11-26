@@ -16,7 +16,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(rawPassword, salt);
         data.password = hashedPassword;
-        return super.createUser(data, creator);
+        return super.create(data, creator);
     }
 
     public updateUser(id, data, updator) {
@@ -31,7 +31,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     }
 
     public getUser(data) {
-        return super.getUser(data);
+        return super.get(data);
     }
 
     public deleteData(id, remover) {
