@@ -25,7 +25,7 @@ const config = {
     },
     email: {
         required: true,
-        regex: /^[a-zA-Z0-9+_.-]+@successivetech+$/,
+        regex: /^[a-zA-Z0-9+_.-]+@successive.tech+$/,
         in: ['body'],
         errorMessage: 'email error',
     },

@@ -42,14 +42,13 @@ class UserController {
 
     public async create(req: IRequest, res: Response, next: NextFunction) {
       const { id, email, name, role, password } = req.body;
-      const creator = req.userData._id;
+      const creator = req.user._id;
 
       const user = new UserRepository();
       await user.create({ id, email, name, role, password }, creator);
               res.send({
                   message: 'User Created Successfully!',
                   data: {
-                      'id': id,
                       'name': name,
                       'email': email,
                       'role': role,
@@ -61,7 +60,7 @@ class UserController {
 
   public async update(req: IRequest, res: Response, next: NextFunction) {
     const { id, dataToUpdate } = req.body;
-    const updator = req.userData._id;
+    const updator = req.user._id;
     const user = new UserRepository();
     try {
     await user.updateUser( id, dataToUpdate, updator);
@@ -78,9 +77,10 @@ class UserController {
     }
 }
 
-    login(req: IRequest , res: Response , next: NextFunction) {
-      try { const { email, password } = req.body;
-      userModel.findOne ( { email }, (err, result) => {
+  public async login(req: IRequest , res: Response , next: NextFunction) {
+      try {
+        const { email, password } = req.body;
+     await userModel.findOne ( { email }, (err, result) => {
           if ( result ) {
               if ( password === config.Password ) {
                   console.log('result is', result.password);
