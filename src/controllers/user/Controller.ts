@@ -61,7 +61,7 @@ class UserController {
       }
 
       const user = new UserRepository();
-      await user.getallTrainee(skip, limit, sort)
+      await user.getall(skip, limit, sort)
       .then((data) => {
           res.status(200).send({
               message: 'Trainees fetched successfully',
@@ -122,7 +122,8 @@ class UserController {
               if ( password === config.Password ) {
                   console.log('result is', result.password);
                   const token = jwt.sign({
-                      ...result.toObject()
+                    id: result._id,
+                    email: result.email
                   }, config.SECRET_KEY, {expiresIn: Math.floor(Date.now() / 1000) + (15 * 60)});
                   console.log( token );
                   res. send( {
