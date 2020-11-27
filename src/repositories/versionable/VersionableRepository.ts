@@ -6,7 +6,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     }
     private model: M;
 
-    constructor(model) {
+    constructor(model: any) {
         this.model = model;
     }
 
@@ -22,7 +22,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return this.model.findOne(query).lean();
     }
 
-    public async create(data: any, creator): Promise<D> {
+    public async create(data: any, creator: any): Promise<D> {
 
         const id = VersionableRepository.generateObjectId();
 
@@ -40,7 +40,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return this.model.findOne(data);
     }
 
-    public async update(id: string, dataToUpdate: any, updator) {
+    public async update(id: string, dataToUpdate: any, updator: any) {
 
 
         try {
