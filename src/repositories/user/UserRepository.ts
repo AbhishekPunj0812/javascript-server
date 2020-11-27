@@ -1,8 +1,9 @@
 import * as mongoose from 'mongoose';
 import IUserModel from './IUserModel';
 import { userModel } from './UserModel';
-
+import * as bcrypt from 'bcrypt';
 import VersionableRepository from '../versionable/VersionableRepository';
+import { query } from 'express';
 
 export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
 
@@ -10,27 +11,45 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
         super(userModel);
     }
 
-    public create(data, creator) {
-        return super.createUser(data, creator);
+    public create(data: any, creator: any) {
+        const rawPassword = data.password;
+        const saltRounds = 10;
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+        data.password = hashedPassword;
+        return super.create(data, creator);
     }
 
-    public updateUser(id, data, updator) {
+    public updateUser(id: string, data: any, updator: any) {
+        if ('password' in data) {
+            const rawPassword = data.password;
+            const saltRounds = 10;
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+            data.password = hashedPassword;
+        }
         return super.update(id, data, updator);
     }
 
-    public getUser(data) {
-        return super.getUser(data);
+    public getUser(data: any) {
+
+        return super.get(data);
     }
 
-    public deleteData(id, remover) {
+    public deleteData(id: string, remover: string) {
         return super.delete(id, remover);
     }
 
-    public findone(data) {
+    public findone(data: any) {
         return super.findOne(data);
     }
+    // tslint:disable-next-line:no-shadowed-variable
+    public find(query: any) {
+        return super.find(query);
+    }
 
-    public countData() {
-        return super.count();
+    // tslint:disable-next-line: no-shadowed-variable
+    public countData(query: any) {
+        return super.count(query);
     }
 }

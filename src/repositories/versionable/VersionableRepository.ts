@@ -1,9 +1,12 @@
 import * as mongoose from 'mongoose';
 
 export default class VersionableRepository<D extends mongoose.Document, M extends mongoose.Model<D>> {
+    public find(query: any) {
+        return this.model.find(query).lean();
+    }
     private model: M;
 
-    constructor(model) {
+    constructor(model: any) {
         this.model = model;
     }
 
@@ -11,15 +14,16 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return String(mongoose.Types.ObjectId());
     }
 
-    public count() {
-        return this.model.countDocuments();
+    public count(query: any) {
+        return this.model.countDocuments(query);
     }
 
     public findOne(query: object) {
         return this.model.findOne(query).lean();
     }
 
-    public createUser(data: any, creator): Promise<D> {
+    public async create(data: any, creator: any): Promise<D> {
+
         const id = VersionableRepository.generateObjectId();
 
         const modelData = {
@@ -29,96 +33,75 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             _id: id,
         };
 
-        return this.model.create(modelData);
+        return await this.model.create(modelData);
     }
 
-    public getUser(data: any) {
+    public get(data: any) {
         return this.model.findOne(data);
     }
 
-    public update(id: string, dataToUpdate: any, updator) {
+    public async update(id: string, dataToUpdate: any, updator: any) {
 
-        return new Promise((resolve, reject) => {
-            let originalData;
-            this.findOne({ id: ( id ), updatedAt: undefined, deletedAt: undefined }).lean()
-                .then((data) => {
+
+        try {
+                let originalData;
+                const data =   await this.findOne({ id: id, updatedAt: undefined, deletedAt: undefined });
                     if (data === null) {
-                        throw '';
+                        throw 'Record Not Found';
                     }
                     originalData = data;
-                    const newId = VersionableRepository.generateObjectId();
-                    const oldId = originalData._id;
-                    const oldModel = {
-                        ...originalData,
-                        updatedAt: Date.now(),
-                        updatedBy: updator,
-                        deletedAt: Date.now(),
-                        deletedBy: updator,
-                    };
+                const newId = VersionableRepository.generateObjectId();
+                const oldId = originalData._id;
+                const oldModel = {
+                    ...originalData,
+                    updatedAt: Date.now(),
+                    updatedBy: updator,
+                    deletedAt: Date.now(),
+                    deletedBy: updator,
+                };
 
-                    const newData = Object.assign(JSON.parse(JSON.stringify(originalData)), dataToUpdate);
+                const newData = Object.assign(JSON.parse(JSON.stringify(originalData)), dataToUpdate);
 
-                    newData._id = newId;
-                    newData.createdAt = Date.now();
+                newData._id = newId;
+                newData.createdAt = Date.now();
 
-                    this.model.updateOne({ _id: oldId }, oldModel)
-                        .then((res) => {
-                            if (res === null) {
-                                throw '';
-                            }
-                        })
-                        .catch((err) => {
-                            reject(err);
-                        });
-
+                const res = await this.model.updateOne({ _id: oldId }, oldModel);
+                        if (res === null) {
+                            throw 'Unable to update';
+                        }
                     this.model.create(newData);
+            }
 
-                    resolve(undefined);
-
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-
-        });
-
-    }
-
-    public delete(id: string, remover: string) {
-
-        return new Promise((resolve, reject) => {
-            let originalData;
-
-            this.findOne({ id: ( id ), deletedAt: undefined }).lean()
-                .then((data) => {
-                    if (data === null) {
-                        throw '';
+            catch (err) {
+                        console.log('Error: ', err);
                     }
+            }
+    public async delete(id: string, remover: string) {
 
-                    originalData = data;
-                    const oldId = originalData._id;
+        let originalData;
 
-                    const modelDelete = {
-                        ...originalData,
-                        deletedAt: Date.now(),
-                        deletedBy: remover,
-                    };
+        try {
+            const data = await this.findOne({ id: ( id ), deletedAt: undefined }).lean();
+            if (data === null) {
+                throw 'Record not found';
+            }
 
-                    this.model.updateOne({ _id: oldId }, modelDelete)
-                        .then((res) => {
-                            if (res === null) {
-                                throw '';
-                            }
-                        })
-                        .catch((err) => {
-                            reject(err);
-                        });
-                    resolve(undefined);
+            originalData = data;
+            const oldId = originalData._id;
 
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-        });
+            const modelDelete = {
+            ...originalData,
+            deletedAt: Date.now(),
+            deletedBy: remover,
+            };
+
+            const res = await this.model.updateOne({ _id: oldId }, modelDelete);
+                if (res === null) {
+                    throw 'Unable to Update';
+                }
+        }
+        catch (err) {
+             console.log('Error: ', err);
+        }
     }
 }
