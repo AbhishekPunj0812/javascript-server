@@ -52,7 +52,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     public countData(query: any) {
         return super.count(query);
     }
-    public getallTrainee(sort, skip, limit) {
+    public getallTrainee(sort: boolean, skip: number, limit: number) {
         return super.getall(skip, limit, sort);
     }
 }
