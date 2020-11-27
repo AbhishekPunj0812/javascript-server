@@ -23,6 +23,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     }
 
     public async create(data: any, creator): Promise<D> {
+
         const id = VersionableRepository.generateObjectId();
 
         const modelData = {
@@ -42,13 +43,13 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     public async update(id: string, dataToUpdate: any, updator) {
 
 
-    try {
-        let originalData;
-        const data =   await this.findOne({ id: id, updatedAt: undefined, deletedAt: undefined });
-                if (data === null) {
-                    throw 'Record Not Found';
-                }
-                originalData = data;
+        try {
+                let originalData;
+                const data =   await this.findOne({ id: id, updatedAt: undefined, deletedAt: undefined });
+                    if (data === null) {
+                        throw 'Record Not Found';
+                    }
+                    originalData = data;
                 const newId = VersionableRepository.generateObjectId();
                 const oldId = originalData._id;
                 const oldModel = {
@@ -64,41 +65,43 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
                 newData._id = newId;
                 newData.createdAt = Date.now();
 
-             const res = await this.model.updateOne({ _id: oldId }, oldModel);
+                const res = await this.model.updateOne({ _id: oldId }, oldModel);
                         if (res === null) {
                             throw 'Unable to update';
                         }
                     this.model.create(newData);
-    }
-                    catch (err) {
+            }
+
+            catch (err) {
                         console.log('Error: ', err);
                     }
             }
     public async delete(id: string, remover: string) {
 
-            let originalData;
-    try {
-        const data = await this.findOne({ id: ( id ), deletedAt: undefined }).lean();
-        if (data === null) {
-            throw 'Record not found';
-        }
+        let originalData;
 
-        originalData = data;
-        const oldId = originalData._id;
+        try {
+            const data = await this.findOne({ id: ( id ), deletedAt: undefined }).lean();
+            if (data === null) {
+                throw 'Record not found';
+            }
 
-        const modelDelete = {
+            originalData = data;
+            const oldId = originalData._id;
+
+            const modelDelete = {
             ...originalData,
             deletedAt: Date.now(),
             deletedBy: remover,
-        };
+            };
 
-        const res = await this.model.updateOne({ _id: oldId }, modelDelete);
+            const res = await this.model.updateOne({ _id: oldId }, modelDelete);
                 if (res === null) {
                     throw 'Unable to Update';
                 }
-    }
-                        catch (err) {
-                            console.log('Error: ', err);
-                        }
+        }
+        catch (err) {
+             console.log('Error: ', err);
+        }
     }
 }

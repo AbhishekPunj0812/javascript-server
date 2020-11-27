@@ -32,6 +32,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     }
 
     public getUser(data) {
+
         return super.get(data);
     }
 

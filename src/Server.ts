@@ -6,26 +6,28 @@ import Database from './libs/Database';
 class Server {
     app;
     constructor(private config) {
-         this.app = express();
+        this.app = express();
     }
     bootstrap() {
         this.initBodyParser();
-    this.setupRoutes();
-    return this;
+        this.setupRoutes();
+        return this;
     }
     public setupRoutes() {
-         const { app } = this;
-         app.use('/health-check', ( req, res, next) => {
+        const { app } = this;
+        app.use('/health-check', ( req, res, next) => {
               res.send('I am Ok');
         });
-         this.app.use('/api', routes);
+        this.app.use('/api', routes);
         this.app.use(notFoundHandler);
         this.app.use(errorHandler);
-         return this;
+        return this;
     }
+
     public initBodyParser() {
         this.app.use(bodyParser.json());
     }
+
     run() {
         const { app, config: { PORT } } = this;
         Database.open(this.config.MONGO_URL)
