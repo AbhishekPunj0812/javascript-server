@@ -55,4 +55,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     public getallTrainee(sort: boolean, skip: number, limit: number) {
         return super.getall(skip, limit, sort);
     }
+    public list1( userRole, sort, skip, limit, searchBy) {
+        return super.list( userRole, sort, skip, limit, searchBy);
+     }
 }

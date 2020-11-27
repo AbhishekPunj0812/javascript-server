@@ -182,7 +182,27 @@ class UserController {
     me (req: IRequest, res: Response, next: NextFunction) {
         res.json(req.user);
     }
+    public async search(req: IRequest, res: Response, next: NextFunction) {
+      const searchField = req.query.srch;
+      const user = new UserRepository();
+      user.find({
+          '$or': [
+              {name: {$regex: searchField, $options: '$i' } },
+              {email: {$regex: searchField, $options: '$i'} }
+          ]
+      })
 
+      .then ( data => {
+          res.send(data);
+      })
+
+      .catch ((err) => {
+          res.send({
+              message: 'no results',
+              code: 404
+          });
+      });
+    }
 
     public async remove(req: IRequest, res: Response, next: NextFunction) {
             const  id  = req.params.id;
