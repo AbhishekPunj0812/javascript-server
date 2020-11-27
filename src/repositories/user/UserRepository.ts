@@ -3,6 +3,7 @@ import IUserModel from './IUserModel';
 import { userModel } from './UserModel';
 import * as bcrypt from 'bcrypt';
 import VersionableRepository from '../versionable/VersionableRepository';
+import { query } from 'express';
 
 export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
 
@@ -41,12 +42,14 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     public findone(data) {
         return super.findOne(data);
     }
+    // tslint:disable-next-line:no-shadowed-variable
     public find(query) {
         return super.find(query);
     }
 
-    public countData() {
-        return super.count();
+    // tslint:disable-next-line: no-shadowed-variable
+    public countData(query) {
+        return super.count(query);
     }
     public getallTrainee(sort, skip, limit) {
         return super.getall(skip, limit, sort);

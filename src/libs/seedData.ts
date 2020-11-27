@@ -1,11 +1,13 @@
 import UserRepository from '../repositories/user/UserRepository';
 import * as bcrypt from 'bcrypt';
-import config from '../config/configuration';
+
+import config  from '../config/configuration';
+import { query } from 'express';
 
 
 const userRepository: UserRepository = new UserRepository();
 export default () => {
-  userRepository.count()
+  userRepository.count(query)
     .then(res => {
       if (res === 0) {
         const saltRounds = 10;
@@ -45,5 +47,4 @@ export default () => {
       }
     })
     .catch(err => console.log(err));
-
-};
+    };

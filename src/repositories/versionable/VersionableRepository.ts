@@ -14,8 +14,8 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return String(mongoose.Types.ObjectId());
     }
 
-    public count() {
-        return this.model.countDocuments();
+    public count(query: any) {
+        return this.model.countDocuments(query);
     }
 
     public findOne(query: object) {
@@ -39,25 +39,29 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return this.model.findOne(data);
     }
     public async getall(skipDefined: number, limitDefined: number, sort: boolean) {
-        if ( sort ) {
-        const fetchData = await this.model.find( { deletedAt : undefined})
-        .skip(skipDefined)
-        .limit(limitDefined)
-        .sort({name: 1, email: 1});
-        const count = await this.model.find( {deletedAt: undefined})
-        .countDocuments();
-
-        const arr = [fetchData, count];
-        return arr;
-        } else {
-            const fetchData = await this.model.find({deletedAt: undefined})
-            .skip(skipDefined)
-            .limit(limitDefined)
-            .sort({createdAt: -1});
-            const count = await this.model.find({deletedAt: undefined})
-            .countDocuments();
-            const arr = [fetchData, count];
-            return arr;
+        try {
+            if ( sort ) {
+                const fetchData = await this.model.find( { deletedAt : undefined})
+                .skip(skipDefined)
+                .limit(limitDefined)
+                .sort({name: 1, email: 1});
+                const count = await this.model.find( {deletedAt: undefined})
+                .countDocuments();
+                const arr = [fetchData, count];
+                return arr;
+                } else {
+                    const fetchData = await this.model.find({deletedAt: undefined})
+                    .skip(skipDefined)
+                    .limit(limitDefined)
+                    .sort({createdAt: -1});
+                    const count = await this.model.find({deletedAt: undefined})
+                    .countDocuments();
+                    const arr = [fetchData, count];
+                    return arr;
+                }
+        }
+        catch (err) {
+            console.log('Error inside getAll', err);
         }
         }
     public async update(id: string, dataToUpdate: any, updator) {
