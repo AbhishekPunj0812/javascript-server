@@ -14,8 +14,8 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return String(mongoose.Types.ObjectId());
     }
 
-    public count() {
-        return this.model.countDocuments();
+    public count(query: any) {
+        return this.model.countDocuments(query);
     }
 
     public findOne(query: object) {

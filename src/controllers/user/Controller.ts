@@ -43,8 +43,8 @@ class UserController {
     public async create(req: IRequest, res: Response, next: NextFunction) {
       const { id, email, name, role, password } = req.body;
       const creator = req.user._id;
-
-      const user = new UserRepository();
+      try {
+        const user = new UserRepository();
       await user.create({ id, email, name, role, password }, creator);
               res.send({
                   message: 'User Created Successfully!',
@@ -56,6 +56,11 @@ class UserController {
                   },
                   code: 200
               });
+      }
+      catch (err) {
+        res.send(err);
+      }
+
   }
 
   public async update(req: IRequest, res: Response, next: NextFunction) {
@@ -82,7 +87,7 @@ class UserController {
         const { email, password } = req.body;
      await userModel.findOne ( { email }, (err, result) => {
           if ( result ) {
-              if ( password === config.Password ) {
+              if ( bcrypt.compareSync(req.body.password, result. password) ) {
                   console.log('result is', result.password);
                   const token = jwt.sign({
                         id: result._id,
