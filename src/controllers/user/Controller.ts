@@ -100,24 +100,6 @@ class UserController {
         res.send(err);
       }
 
-      try {
-          const user = new UserRepository();
-        await user.create({ id, email, name, role, password }, creator);
-                res.send({
-                    message: 'User Created Successfully!',
-                    data: {
-                        'name': name,
-                        'email': email,
-                        'role': role,
-                        'password': password
-                    },
-                    code: 200
-                });
-        }
-        catch (err) {
-          res.send(err);
-        }
-
     }
 
     public async update(req: IRequest, res: Response, next: NextFunction) {
