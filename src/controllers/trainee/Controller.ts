@@ -22,19 +22,12 @@ class TraineeController {
       let search: string = '';
 
       if ('limit' in req.query) {
-          limit = Number(req.query.limit);
-      }
-      else {
-          limit = 10;
+        limit = ('limit' in req.query) ? Number(req.query.limit) : 10;
       }
 
       if ('skip' in req.query) {
-          skip = Number(req.query.skip);
+           skip = ('skip' in req.query) ? Number(req.query.limit) : 0;
       }
-      else {
-          skip = 0;
-      }
-
 
       if ('sort' in req.query) {
           if (req.query.sort === 'true') {
@@ -137,25 +130,24 @@ class TraineeController {
                   });
               }
       }
-      public update(req: IRequest, res: Response, next: NextFunction) {
+      public async update(req: IRequest, res: Response, next: NextFunction) {
         const { id, dataToUpdate } = req.body;
         const user = new UserRepository();
         const updator = req.userData._id;
-        user.updateUser(id, dataToUpdate, updator)
-            .then((result) => {
-
-                res.status(200).send({
-                    message: 'User Updated',
-                    code: 200
-                });
-            })
-            .catch((err) => {
+            try {
+              const result = await user.updateUser(id, dataToUpdate, updator);
+              res.status(200).send({
+                  message: 'User Updated',
+                  code: 200
+              });
+            }
+            catch (err) {
                 next({
                     message: 'User Not Found for update',
                     code: 404,
                     error: err
                 });
-            });
+            }
         }
 
         public async delete(req: IRequest, res: Response, next: NextFunction) {
@@ -164,10 +156,14 @@ class TraineeController {
               try {
                 const deletor = req.userData._id;
                 const result = await user.delete(id, deletor);
-                        res.send({
-                            message: 'Deleted successfully',
-                            code: 200
-                        });
+                if (result !== undefined) {
+                  res.send({
+                    message: 'Deleted successfully',
+                    code: 200,
+                    data: result
+                });
+                }
+
               }
               catch (err) {
                   next({
@@ -175,9 +171,9 @@ class TraineeController {
                       code: 404,
                       error: err
                   });
-          }
-      }
+              }
+        }
 
-  }
+}
 
   export default  new TraineeController();
