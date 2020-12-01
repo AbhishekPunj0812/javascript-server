@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import * as mongoose from 'mongoose';
 import IUserModel from './IUserModel';
 import { userModel } from './UserModel';
 import * as bcrypt from 'bcrypt';

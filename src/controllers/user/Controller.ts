@@ -104,6 +104,7 @@ class UserController {
               message: err
             });
           }
+
     }
 
     public async update(req: IRequest, res: Response, next: NextFunction) {
