@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import IUserModel from './IUserModel';
 import { userModel } from './UserModel';
 import * as bcrypt from 'bcrypt';
@@ -49,10 +50,34 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     }
 
     // tslint:disable-next-line: no-shadowed-variable
-    public countData(query: any) {
+    public count(query: any) {
         return super.count(query);
     }
-    public getallTrainee(sort: boolean, skip: number, limit: number) {
-        return super.getall(skip, limit, sort);
+    public async getallTrainee(sort: boolean, skip: number, limit: number) {
+        try {
+            if ( sort ) {
+                    const fetchData = await this.model.find( { deletedAt : undefined})
+                    .skip(skip)
+                    .limit(limit)
+                    .sort({name: 1, email: 1});
+                    const count = await this.model.find( {deletedAt: undefined})
+                    .countDocuments();
+                    const arr = [fetchData, count];
+                    return arr;
+            }
+            else {
+                    const fetchData = await this.model.find({deletedAt: undefined})
+                    .skip(skip)
+                    .limit(limit)
+                    .sort({createdAt: -1});
+                    const count = await this.model.find({deletedAt: undefined})
+                    .countDocuments();
+                    const arr = [fetchData, count];
+                    return arr;
+            }
+        }
+        catch (err) {
+            console.log('Error inside getAll', err);
+        }
     }
 }

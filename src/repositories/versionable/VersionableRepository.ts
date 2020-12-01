@@ -1,10 +1,11 @@
 import * as mongoose from 'mongoose';
+import { Document, Query, DocumentQuery } from 'mongoose';
 
 export default class VersionableRepository<D extends mongoose.Document, M extends mongoose.Model<D>> {
     public find(query: any) {
         return this.model.find(query).lean();
     }
-    private model: M;
+    public model: M;
 
     constructor(model: any) {
         this.model = model;
@@ -40,34 +41,10 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return this.model.findOne(data);
     }
 
-    public async getall(skipDefined: number, limitDefined: number, sort: boolean) {
-        try {
-            if ( sort ) {
-                    const fetchData = await this.model.find( { deletedAt : undefined})
-                    .skip(skipDefined)
-                    .limit(limitDefined)
-                    .sort({name: 1, email: 1});
-                    const count = await this.model.find( {deletedAt: undefined})
-                    .countDocuments();
-                    const arr = [fetchData, count];
-                    return arr;
-            }
-            else {
-                    const fetchData = await this.model.find({deletedAt: undefined})
-                    .skip(skipDefined)
-                    .limit(limitDefined)
-                    .sort({createdAt: -1});
-                    const count = await this.model.find({deletedAt: undefined})
-                    .countDocuments();
-                    const arr = [fetchData, count];
-                    return arr;
-            }
-        }
-        catch (err) {
-            console.log('Error inside getAll', err);
-        }
+    public  getall(query: any, projection: any, options: any): DocumentQuery<D[], D> {
+        const finalQuery = { deletedAt: undefined, ...query };
+        return this.model.find(finalQuery, projection, options);
     }
-
     public async update(id: string, dataToUpdate: any, updator: any) {
 
 
