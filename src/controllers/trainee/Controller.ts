@@ -21,15 +21,11 @@ class TraineeController {
       let sort: boolean;
       let search: string = '';
 
-      if ('limit' in req.query) {
         limit = ('limit' in req.query) ? Number(req.query.limit) : 10;
-      }
 
-      if ('skip' in req.query) {
-           skip = ('skip' in req.query) ? Number(req.query.limit) : 0;
-      }
+        skip = ('skip' in req.query) ? Number(req.query.limit) : 0;
 
-      if ('sort' in req.query) {
+        if ('sort' in req.query) {
           if (req.query.sort === 'true') {
               sort = true;
           }
@@ -136,10 +132,18 @@ class TraineeController {
         const updator = req.userData._id;
             try {
               const result = await user.updateUser(id, dataToUpdate, updator);
-              res.status(200).send({
+              if (result !== undefined) {
+                res.status(200).send({
                   message: 'User Updated',
                   code: 200
-              });
+                });
+              }
+              else {
+                res.send(404).send( {
+                  message: 'Record not found',
+                  code: 404
+                });
+              }
             }
             catch (err) {
                 next({
