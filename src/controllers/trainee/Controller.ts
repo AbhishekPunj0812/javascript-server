@@ -163,6 +163,12 @@ class TraineeController {
                     data: result
                 });
                 }
+                else {
+                  res.send({
+                    message: 'Record does not exist in DB',
+                    code: 404
+                  });
+                }
 
               }
               catch (err) {
