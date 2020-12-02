@@ -72,9 +72,10 @@ class UserController {
 
       }
       catch (err) {
-          res.send({
-              message : 'Unable to fetch Trainees',
-              status : 404
+          next({
+              error : 'Unable to fetch Trainees',
+              code : 404,
+              message : err
           });
       }
     }
@@ -96,27 +97,13 @@ class UserController {
                   code: 200
               });
       }
-      catch (err) {
-        res.send(err);
-      }
-
-      try {
-          const user = new UserRepository();
-        await user.create({ id, email, name, role, password }, creator);
-                res.send({
-                    message: 'User Created Successfully!',
-                    data: {
-                        'name': name,
-                        'email': email,
-                        'role': role,
-                        'password': password
-                    },
-                    code: 200
-                });
-        }
-        catch (err) {
-          res.send(err);
-        }
+          catch (err) {
+            next({
+              error: 'Error Occured in creating user',
+              code: 500,
+              message: err
+            });
+          }
 
     }
 
@@ -132,10 +119,11 @@ class UserController {
           });
       }
       catch (err)  {
-          res.send({
-              error: 'User Not Found for update',
-              code: 404
-          });
+        next({
+          error: 'Error Occured in updating user',
+          code: 500,
+          message: err
+        });
       }
     }
 
@@ -173,7 +161,11 @@ class UserController {
               });
           }
           catch ( err ) {
-            res.send( err );
+            next({
+              error: 'Error Occured while login',
+              code: 500,
+              message: err
+            });
           }
 
     }
@@ -216,9 +208,11 @@ class UserController {
                     });
             }
             catch (err) {
-                res.send({
-                  message: 'User not found to be deleted',
-                  code: 404});
+                next({
+                  error: 'User not found to be deleted',
+                  code: 404,
+                  message: err
+                });
             }
     }
 
