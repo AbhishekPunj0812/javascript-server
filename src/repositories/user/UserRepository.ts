@@ -79,7 +79,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
             console.log('Error inside getAll', err);
         }
     }
-    public list1( userRole, sort, skip, limit, searchBy) {
+    public list1( userRole: any, sort: boolean, skip: number, limit: number, searchBy: any) {
         return super.list( userRole, sort, skip, limit, searchBy);
      }
 }

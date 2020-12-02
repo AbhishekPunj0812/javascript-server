@@ -109,7 +109,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
              console.log('Error: ', err);
         }
     }
-    public async list(userRole, sort, skip, limit, searchBy): Promise<D[]> {
+    public async list(userRole: any, sort: boolean, skip: number, limit: number, searchBy: any): Promise<D[]> {
         return this.model.find({role: userRole, deletedAt: undefined, ...searchBy}).sort(sort).skip(Number(skip)).limit(Number(limit));
     }
 }
