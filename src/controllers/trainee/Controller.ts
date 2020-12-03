@@ -25,17 +25,8 @@ class TraineeController {
 
         skip = ('skip' in req.query) ? Number(req.query.limit) : 0;
 
-        if ('sort' in req.query) {
-          if (req.query.sort === 'true') {
-              sort = true;
-          }
-          else {
-              sort = false;
-          }
-      }
-      else {
-          sort = false;
-      }
+				sort = ('sort' in req.query) ? Boolean(req.query.sort) : false;
+
 
       if ('search' in req.query) {
           search = req.query.search;
