@@ -51,10 +51,6 @@ userRouter.route('/')
 .post(authMiddleware('getUser', 'write'), validationHandler(validation.create), UserController.create)
 .put(authMiddleware('getUser', 'write'), validationHandler(validation.update), UserController.update);
 
-userRouter.route('/')
-.get(authMiddleware('getUser', 'read'), validationHandler( validation.get), UserController.get)
-.post(authMiddleware('getUser', 'write'), validationHandler( validation.create ), UserController.create)
-.put(authMiddleware('getUser', 'write'), validationHandler(validation.update ), UserController.update);
 
 userRouter.get('/', authMiddleware('getUser', 'get'), validationHandler(validation.get), UserController.getAll);
 

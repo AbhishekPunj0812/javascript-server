@@ -15,6 +15,8 @@ class UserController {
       UserController.instance = new UserController();
         return UserController.instance;
     }
+    userRepository: UserRepository = new UserRepository();
+
 
     public async get(req: IRequest, res: Response, next: NextFunction) {
       try {
@@ -46,28 +48,21 @@ class UserController {
       let limit: number;
       let sort: boolean;
 
-      if ('limit' in req.query) {
-          limit = Number(req.query.limit);
-      } else {
-          limit = 10;
-      }
-      if ('skip' in req.query) {
-          skip = Number(req.query.limit);
-      } else {
-          skip = 0;
-      }
-      if ('sort' in req.query) {
-          sort = true;
-      } else {
-          sort = false;
-      }
+      limit = ('limit' in req.query) ? Number(req.query.limit) : 10;
+
+      skip = ('skip' in req.query) ? Number(req.query.skip) : 0;
+
+      sort = ('sort' in req.query) ? Boolean(req.query.sort) : false;
+
       try {
         const user = new UserRepository();
         const data = await user.getall(skip, limit, sort);
             res.status(200).send({
                 message: 'Trainees fetched successfully',
+                trainee: {
                 'count': data[1],
-                'data':   data
+                'data':   data[0]
+                }
             });
 
       }
@@ -127,39 +122,37 @@ class UserController {
       }
     }
 
-
     public async login(req: IRequest , res: Response , next: NextFunction) {
-        try {
-              const { email, password } = req.body;
-              await userModel.findOne ( { email }, (err, result) => {
-                if ( result ) {
-                  if ( bcrypt.compareSync(req.body.password, result. password) ) {
-                      console.log('result is', result.password);
-                      const token = jwt.sign({
-                          id: result._id,
-                          email: result.email
-                      }, config.SECRET_KEY);
-                      console.log( token );
-                      res. send( {
-                          data: { ...result.toObject(), token },
-                          message: 'Login Permitted',
-                          status: 200
-                      });
-                  }
-                  else {
-                    res.send ( {
-                        message: "password doesn't match",
-                        status: 400
-                    });
-                  }
-                  } else {
-                      res.send ( {
-                        message: ' Email is not registered ',
-                        status: 404
-                      });
-                    }
+      try {
+        const { email, password } = req.body;
+        const result = await this.userRepository.findOne ( { 'email': email } );
+        if ( result ) {
+            if ( bcrypt.compareSync(req.body.password, result. password) ) {
+                console.log('result is', result.password);
+                const token = jwt.sign({
+                    id: result._id,
+                    email: result.email
+                }, config.SECRET_KEY);
+                console.log( token );
+                res.status(200). send( {
+                    message: 'Authorization Token',
+                    data: token
+                });
+            }
+            else {
+              res.send ( {
+                  message: "password doesn't match",
+                  status: 400
               });
-          }
+            }
+          } else {
+                res.send ( {
+                  message: ' Email is not registered ',
+                  status: 404
+                });
+              }
+
+      }
           catch ( err ) {
             next({
               error: 'Error Occured while login',
@@ -167,7 +160,6 @@ class UserController {
               message: err
             });
           }
-
     }
 
 
@@ -198,7 +190,7 @@ class UserController {
 
     public async remove(req: IRequest, res: Response, next: NextFunction) {
             const  id  = req.params.id;
-            const remover = req.userData._id;
+            const remover = req.user._id;
             const user = new UserRepository();
             try {
                     await user.deleteData(id, remover);

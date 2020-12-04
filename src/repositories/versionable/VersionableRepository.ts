@@ -5,7 +5,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     public find(query: any) {
         return this.model.find(query).lean();
     }
-    public model: M;
+    protected model: M;
 
     constructor(model: any) {
         this.model = model;
