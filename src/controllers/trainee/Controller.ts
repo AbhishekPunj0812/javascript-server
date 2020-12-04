@@ -23,10 +23,9 @@ class TraineeController {
 
         limit = ('limit' in req.query) ? Number(req.query.limit) : 10;
 
-        skip = ('skip' in req.query) ? Number(req.query.limit) : 0;
+        skip = ('skip' in req.query) ? Number(req.query.skip) : 0;
 
-				sort = ('sort' in req.query) ? Boolean(req.query.sort) : false;
-
+        sort = ('sort' in req.query) ? Boolean(req.query.sort) : false;
 
       if ('search' in req.query) {
           search = req.query.search;
@@ -76,9 +75,13 @@ class TraineeController {
         const data = await user.getallTrainee(query, options, sortQuery);
 
         res.status(200).send({
-            status: 'ok',
-            message: 'Fetched successfully',
-            Trainees: { data }
+          message: 'Trainees fetched successfully',
+          Trainees: {
+            data : {
+              count : data[1],
+              records : data[0]
+            }
+          }
         });
       }
           catch (err) {
@@ -93,18 +96,16 @@ class TraineeController {
     public async create(req: IRequest, res: Response, next: NextFunction) {
       const {  name, email, role, password } = req.body;
       const user = new UserRepository();
-      const creator = req.userData._id;
+      const creator = req.user._id;
               try {
                 await user.create({  name, email, role, password }, creator);
 
                 res.status(200).send({
-                    message: 'User Created Successfully!',
+                    message: 'Trainee Created Successfully!',
                     data: {
                         'name': name,
                         'email': email,
-                        'role': role,
-                        'password': password
-
+                        'role': role
                     },
                     code: 200
                 });
@@ -120,13 +121,15 @@ class TraineeController {
       public async update(req: IRequest, res: Response, next: NextFunction) {
         const { id, dataToUpdate } = req.body;
         const user = new UserRepository();
-        const updator = req.userData._id;
+        const updator = req.user._id;
             try {
               const result = await user.updateUser(id, dataToUpdate, updator);
               if (result !== undefined) {
                 res.status(200).send({
-                  message: 'User Updated',
-                  code: 200
+                  message: 'Trainee Updated Successfully',
+                  data: {
+                    'id': id
+                  }
                 });
               }
               else {
@@ -149,11 +152,11 @@ class TraineeController {
           const id = req.params.id;
           const user = new UserRepository();
               try {
-                const deletor = req.userData._id;
+                const deletor = req.user._id;
                 const result = await user.delete(id, deletor);
                 if (result !== undefined) {
                   res.send({
-                    message: 'Deleted successfully',
+                    message: 'Trainee Deleted Successfully',
                     code: 200,
                     data: result
                 });
