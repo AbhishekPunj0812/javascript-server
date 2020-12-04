@@ -46,19 +46,21 @@ class UserController {
       let limit: number;
       let sort: boolean;
 
-			limit = ('limit' in req.query) ? Number(req.query.limit) : 10;
+      limit = ('limit' in req.query) ? Number(req.query.limit) : 10;
 
       skip = ('skip' in req.query) ? Number(req.query.skip) : 0;
 
       sort = ('sort' in req.query) ? Boolean(req.query.sort) : false;
-			
+
       try {
         const user = new UserRepository();
         const data = await user.getall(skip, limit, sort);
             res.status(200).send({
                 message: 'Trainees fetched successfully',
+                trainee: {
                 'count': data[1],
-                'data':   data
+                'data':   data[0]
+                }
             });
 
       }
@@ -70,7 +72,6 @@ class UserController {
           });
       }
     }
-
     public async create(req: IRequest, res: Response, next: NextFunction) {
       const { id, email, name, role, password } = req.body;
       const creator = req.user._id;
