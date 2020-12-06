@@ -12,7 +12,7 @@ userRouter.route('/')
 
 userRouter.get('/', authMiddleware('getUser', 'get'), validationHandler(validation.get), UserController.getAll);
 
-userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler( validation.delete ), UserController.delete);
+userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler( validation.delete ), UserController.remove);
 
 userRouter.route('/me')
 .get(authMiddleware('getUser', 'read'), validationHandler( validation.get), UserController.me);
