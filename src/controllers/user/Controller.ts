@@ -42,45 +42,13 @@ class UserController {
         });
       }
     }
-    public async getAll(req: IRequest, res: Response, next: NextFunction) {
-
-      let skip: number;
-      let limit: number;
-      let sort: boolean;
-
-      limit = ('limit' in req.query) ? Number(req.query.limit) : 10;
-
-      skip = ('skip' in req.query) ? Number(req.query.skip) : 0;
-
-      sort = ('sort' in req.query) ? Boolean(req.query.sort) : false;
-
-      try {
-        const user = new UserRepository();
-        const data = await user.getall(skip, limit, sort);
-            res.status(200).send({
-                message: 'Trainees fetched successfully',
-                trainee: {
-                'count': data[1],
-                'data':   data[0]
-                }
-            });
-
-      }
-      catch (err) {
-          next({
-              error : 'Unable to fetch Trainees',
-              code : 404,
-              message : err
-          });
-      }
-    }
-
-    public async create(req: IRequest, res: Response, next: NextFunction) {
+	
+    create = async(req: IRequest, res: Response, next: NextFunction) => {
       const { id, email, name, role, password } = req.body;
       const creator = req.user._id;
       try {
-        const user = new UserRepository();
-        await user.create({ id, email, name, role, password }, creator);
+
+        await this.userRepository.create({ id, email, name, role, password }, creator);
               res.send({
                   message: 'User Created Successfully!',
                   data: {
@@ -102,12 +70,11 @@ class UserController {
 
     }
 
-    public async update(req: IRequest, res: Response, next: NextFunction) {
+    update = async(req: IRequest, res: Response, next: NextFunction) => {
       const { id, dataToUpdate } = req.body;
       const updator = req.user._id;
-      const user = new UserRepository();
       try {
-          await user.updateUser( id, dataToUpdate, updator);
+          await this.userRepository.updateUser( id, dataToUpdate, updator);
           res.send({
               message: 'User Updated',
               code: 200
@@ -122,12 +89,13 @@ class UserController {
       }
     }
 
-    public async login(req: IRequest , res: Response , next: NextFunction) {
+     login = async (req: IRequest , res: Response , next: NextFunction) => {
       try {
         const { email, password } = req.body;
         const result = await this.userRepository.findOne ( { 'email': email } );
+        console.log('REsult', result);
         if ( result ) {
-            if ( bcrypt.compareSync(req.body.password, result. password) ) {
+            if ( bcrypt.compareSync(password, result. password) ) {
                 console.log('result is', result.password);
                 const token = jwt.sign({
                     id: result._id,
@@ -166,13 +134,14 @@ class UserController {
     me (req: IRequest, res: Response, next: NextFunction) {
         res.json(req.user);
     }
-    
-    public async remove(req: IRequest, res: Response, next: NextFunction) {
+
+
+    remove = async(req: IRequest, res: Response, next: NextFunction) => {
             const  id  = req.params.id;
             const remover = req.user._id;
-            const user = new UserRepository();
+
             try {
-                    await user.deleteData(id, remover);
+                    await this.userRepository.deleteData(id, remover);
                     res.send({
                     message: 'Deleted successfully',
                     code: 200
@@ -187,19 +156,6 @@ class UserController {
             }
     }
 
-
-    delete(req: Request , res: Response , next: NextFunction) {
-          try {
-              console.log('User delete method of Trainee Controller');
-              res.send({
-                  message: 'User deleted successfully',
-                  data: [ { name: 'User1'}, {name: 'User2'} ]
-              });
-          }
-          catch (err) {
-                  console.log('Inside err', err);
-          }
-    }
 
 }
 
