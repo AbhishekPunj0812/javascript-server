@@ -46,7 +46,7 @@ class Server {
           );
         this.app.use('/api', routes);
         this.app.use(notFoundHandler);
-        this.app.use(errorHandler);
+        // this.app.use(errorHandler);
         return this;
     }
 

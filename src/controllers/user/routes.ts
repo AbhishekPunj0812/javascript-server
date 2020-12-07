@@ -40,7 +40,7 @@ const userRouter: Router = Router();
  *               status:
  *                   example: Ok
  *               message:
- *                   example: Success
+ *                   example: Authorization Token
  *               data:
  *                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5laGEuZ29lbEBzdWNjZXNzaXZlLnRlY2giLCJpZCI6IjVlNGEzNmJjNjQ4MjRiMWY4MGI3MzBjZCIsImlhdCI6MTU4MjU0OTIyN30.cFV6YYlfmhJ1yL3GyIIgb-PjMTpDNVICd5KGi1ENpVI
  */
@@ -55,7 +55,7 @@ userRouter.route('/')
 userRouter.get('/', authMiddleware('getUser', 'get'), validationHandler(validation.get), UserController.getAll);
 
 userRouter.get('/getall', authMiddleware('getUser', 'all'), validationHandler(validation.get), UserController.getAll);
-userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler(validation.delete), UserController.delete);
+userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler(validation.delete), UserController.remove);
 /**
  * @swagger
  *
@@ -125,5 +125,4 @@ userRouter.route('/me')
 userRouter.route('/login')
 .post(validationHandler(validation.login), UserController.login);
 
-userRouter.get('/search', authMiddleware('getUsers', 'read'), UserController.search );
 export default userRouter;

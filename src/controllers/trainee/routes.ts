@@ -7,24 +7,59 @@ const traineeRouter = Router();
 
 /**
  * @swagger
- *
+ *   
  *  definitions:
  *      TraineePost:
  *        type: object
  *        properties:
  *          email:
  *              type: string
- *              example: test@successive.tech
+ *              example: abhi.punj@successive.tech
  *          name:
  *              type: string
- *              example: Abhishek
+ *              example: Abhi Punj
  *          password:
  *              type: string
  *              example: Abhi@123
  *          role:
  *               type: string
  *               example: trainee
+ *      TraineeResponse:
+ *        type: object
+ *        properties:
+ *          _id:
+ *              example: 5e4a36bc64824b1f80b730cd
+ *          email:
+ *              type: string
+ *              example: abhi.punj@successive.tech
+ *          name:
+ *              type: string
+ *              example: Abhi Punj
+ *          role:
+ *              type: string
+ *              example: trainee
+ *          originalId:
+ *              example: 5e4a36bc64824b1f80b730cd
+ *          createdBy:
+ *              example: 5e45404398e86d576ad964e6
+ *          createdAt:
+ *              example: 2020-02-20T11:33:39.325Z
+ *          v:
+ *              example:0
+ *      Unauthorized:
+ *        type: object
+ *        properties:
+ *          error:
+ *              example: Unauthorized
+ *          message:
+ *              example: Token not found
+ *          status:
+ *              example: 403
+ *          timestamp:
+ *               example: 2020-11-25T17:34:37.066Z
+ *
  */
+
 
 traineeRouter.route('/')
 /**
@@ -53,12 +88,12 @@ traineeRouter.route('/')
  *         required: false
  *         type: number
  *       - name: sort
- *         description: Parameter to sort (name or email)
+ *         description: Show in Order
  *         in: query
  *         required: false
- *         type: string
+ *         type: number
  *       - name: search
- *         description: Element to search
+ *         description: Element to search(name or email)
  *         in: query
  *         required: false
  *         type: string

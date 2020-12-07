@@ -2,9 +2,7 @@ import * as mongoose from 'mongoose';
 import { Document, Query, DocumentQuery } from 'mongoose';
 
 export default class VersionableRepository<D extends mongoose.Document, M extends mongoose.Model<D>> {
-    public find(query: any) {
-        return this.model.find(query).lean();
-    }
+
     protected model: M;
 
     constructor(model: any) {
@@ -37,11 +35,8 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return await this.model.create(modelData);
     }
 
-    public get(data: any) {
-        return this.model.findOne(data);
-    }
 
-    public  getall(query: any, projection: any, options: any): DocumentQuery<D[], D> {
+    public  find(query: any, projection: any, options: any): DocumentQuery<D[], D> {
         const finalQuery = { deletedAt: undefined, ...query };
         return this.model.find(finalQuery, projection, options);
     }
@@ -50,7 +45,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
 
         try {
                 let originalData;
-                const data =   await this.findOne({ id: id, updatedAt: undefined, deletedAt: undefined });
+                const data =   await this.findOne({ _id: id, updatedAt: undefined, deletedAt: undefined });
                     if (data === null) {
                         throw 'Record Not Found';
                     }
@@ -108,8 +103,5 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         catch (err) {
              console.log('Error: ', err);
         }
-    }
-    public async list(userRole: any, sort: boolean, skip: number, limit: number, searchBy: any): Promise<D[]> {
-        return this.model.find({role: userRole, deletedAt: undefined, ...searchBy}).sort(sort).skip(Number(skip)).limit(Number(limit));
     }
 }
