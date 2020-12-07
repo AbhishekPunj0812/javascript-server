@@ -13,8 +13,9 @@ class TraineeController {
     TraineeController.instance = new TraineeController();
       return TraineeController.instance;
     }
+    userRepository: UserRepository = new UserRepository();
 
-    public async getAll(req: IRequest, res: Response, next: NextFunction) {
+    getAll = async(req: IRequest, res: Response, next: NextFunction) => {
 
       let skip: number;
       let limit: number;
@@ -51,10 +52,6 @@ class TraineeController {
           ]
       };
 
-      const options: any = {
-          skip: skip,
-          limit: limit
-      };
 
       let sortQuery: any;
 
@@ -70,16 +67,34 @@ class TraineeController {
           };
       }
 
-      const user = new UserRepository();
+      let countQuery: any = {role: 'trainee'};
+      if (search) {
+          countQuery = {
+            ...countQuery,
+            $or: [
+            {
+                name: {
+                    $regex: search,
+                    $options: 'i'
+                }
+            },
+            {
+                email: {
+                    $regex: search,
+                    $options: 'i'
+                }
+            }]
+          };
+      }
       try {
-        const data = await user.getallTrainee(query, options, sortQuery);
-
+        const data = await this.userRepository.find(query, {}, {} ).skip(skip).limit(limit).sort(sortQuery);
+        const count = await this.userRepository.count(countQuery );
         res.status(200).send({
           message: 'Trainees fetched successfully',
           Trainees: {
             data : {
-              count : data[1],
-              records : data[0]
+              count ,
+              records : data
             }
           }
         });
@@ -93,37 +108,38 @@ class TraineeController {
           }
       }
 
-    public async create(req: IRequest, res: Response, next: NextFunction) {
-      const {  name, email, role, password } = req.body;
-      const user = new UserRepository();
-      const creator = req.user._id;
-              try {
-                await user.create({  name, email, role, password }, creator);
+      create = async(req: IRequest, res: Response, next: NextFunction) => {
+        const { id, email, name, role, password } = req.body;
+        const creator = req.user._id;
+        try {
 
-                res.status(200).send({
-                    message: 'Trainee Created Successfully!',
+          await this.userRepository.create({ id, email, name, role, password }, creator);
+                res.send({
+                    message: 'User Created Successfully!',
                     data: {
                         'name': name,
                         'email': email,
-                        'role': role
+                        'role': role,
+                        'password': password
                     },
                     code: 200
                 });
-              }
-              catch (err) {
-                  next({
-                      message: 'User not created',
-                      code: 404,
-                      error: err
-                  });
-              }
+        }
+            catch (err) {
+              next({
+                error: 'Error Occured in creating user',
+                code: 500,
+                message: err
+              });
+            }
+
       }
-      public async update(req: IRequest, res: Response, next: NextFunction) {
+      update = async(req: IRequest, res: Response, next: NextFunction) => {
         const { id, dataToUpdate } = req.body;
-        const user = new UserRepository();
+
         const updator = req.user._id;
             try {
-              const result = await user.updateUser(id, dataToUpdate, updator);
+              const result = await this.userRepository.updateUser(id, dataToUpdate, updator);
               if (result !== undefined) {
                 res.status(200).send({
                   message: 'Trainee Updated Successfully',
@@ -148,12 +164,11 @@ class TraineeController {
             }
         }
 
-        public async delete(req: IRequest, res: Response, next: NextFunction) {
+        delete = async(req: IRequest, res: Response, next: NextFunction) => {
           const id = req.params.id;
-          const user = new UserRepository();
               try {
                 const deletor = req.user._id;
-                const result = await user.delete(id, deletor);
+                const result = await this.userRepository.delete(id, deletor);
                 if (result !== undefined) {
                   res.send({
                     message: 'Trainee Deleted Successfully',
