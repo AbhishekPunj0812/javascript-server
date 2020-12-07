@@ -52,10 +52,12 @@ userRouter.route('/')
 .put(authMiddleware('getUser', 'write'), validationHandler(validation.update), UserController.update);
 
 
-userRouter.get('/', authMiddleware('getUser', 'get'), validationHandler(validation.get), UserController.getAll);
 
-userRouter.get('/getall', authMiddleware('getUser', 'all'), validationHandler(validation.get), UserController.getAll);
+userRouter.get('/', authMiddleware('getUser', 'get'), validationHandler(validation.get) );
+
 userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler(validation.delete), UserController.remove);
+
+
 /**
  * @swagger
  *
