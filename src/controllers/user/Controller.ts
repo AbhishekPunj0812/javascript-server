@@ -42,7 +42,6 @@ class UserController {
         });
       }
     }
-
     create = async(req: IRequest, res: Response, next: NextFunction) => {
       const { id, email, name, role, password } = req.body;
       const creator = req.user._id;

@@ -40,5 +40,4 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     public findone(data: any) {
         return super.findOne(data);
     }
-
 }

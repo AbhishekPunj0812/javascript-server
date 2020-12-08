@@ -57,7 +57,6 @@ userRouter.get('/', authMiddleware('getUser', 'get'), validationHandler(validati
 
 userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler(validation.delete), UserController.remove);
 
-
 /**
  * @swagger
  *
