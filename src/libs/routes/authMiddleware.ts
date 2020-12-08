@@ -1,14 +1,15 @@
 import  * as jwt from 'jsonwebtoken';
 import { hasPermission } from '../../libs/permission';
 import { permissions } from '../../libs/constants';
+import UserRepository from '../../repositories/user/UserRepository';
 import { config } from '../../config';
 import IRequest from '../../libs/routes/IRequest';
 import { NextFunction, Request, Response } from 'express';
-import { userModel } from '../../repositories/user/UserModel';
 
-export default (module: string, permissionType: string ) => (req: IRequest, res: Response, next: NextFunction) => {
+export default (module: string, permissionType: string ) => async (req: IRequest, res: Response, next: NextFunction) => {
   try {
-
+      // tslint:disable-next-line: new-parens
+      const userRepository = new UserRepository;
       console.log('The config is', module, permissionType);
       console.log('Header is', req.headers.authorization);
       const token = req.headers.authorization;
@@ -18,7 +19,7 @@ export default (module: string, permissionType: string ) => (req: IRequest, res:
         throw new Error('Unauthoriesd');
       }
 
-      userModel.findOne({ email: decodedUser.email }, (err, result) => {
+      const result = await userRepository.findOne({ email: decodedUser.email });
           console.log(result);
           if (!result) {
               return next({
@@ -26,8 +27,8 @@ export default (module: string, permissionType: string ) => (req: IRequest, res:
                   code: 403
               });
           }
-          if (hasPermission(module, decodedUser.role, permissionType)) {
-            console.log(decodedUser.role + 'has permission' + permissionType, true);
+          if (hasPermission(module, result.role, permissionType)) {
+            console.log(result.role + 'has permission' + permissionType, true);
             req.user = result;
             next();
           }
@@ -35,7 +36,6 @@ export default (module: string, permissionType: string ) => (req: IRequest, res:
             console.log('error');
             throw new Error('Unauthorized');
           }
-      });
   }
   catch (err) {
     next({
