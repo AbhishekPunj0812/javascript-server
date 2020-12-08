@@ -31,10 +31,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
         return super.update(id, data, updator);
     }
 
-    public getUser(data: any) {
 
-        return super.get(data);
-    }
 
     public deleteData(id: string, remover: string) {
         return super.delete(id, remover);
@@ -43,13 +40,5 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     public findone(data: any) {
         return super.findOne(data);
     }
-    // tslint:disable-next-line:no-shadowed-variable
-    public find(query: any) {
-        return super.find(query);
-    }
-
-    // tslint:disable-next-line: no-shadowed-variable
-    public countData(query: any) {
-        return super.count(query);
-    }
+	
 }

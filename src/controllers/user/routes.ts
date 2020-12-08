@@ -10,7 +10,9 @@ userRouter.route('/')
 .post(authMiddleware('getUser', 'write'), validationHandler( validation.create ), UserController.create)
 .put(authMiddleware('getUser', 'write'), validationHandler(validation.update ), UserController.update);
 
-userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler( validation.delete ), UserController.delete);
+userRouter.get('/', authMiddleware('getUser', 'get'), validationHandler(validation.get), UserController.getAll);
+
+userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationHandler( validation.delete ), UserController.remove);
 
 userRouter.route('/me')
 .get(authMiddleware('getUser', 'read'), validationHandler( validation.get), UserController.me);

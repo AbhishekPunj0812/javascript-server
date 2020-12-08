@@ -64,6 +64,12 @@ const config = {
             errorMessage: 'Limit is invalid'
         }
     },
+    sort: {
+        required: false,
+        boolean: true,
+        in: ['query'],
+        errorMessage: 'Sort is invalid',
+    },
     update:
     {
         id:
