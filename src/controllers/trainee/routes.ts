@@ -28,6 +28,7 @@ const traineeRouter = Router();
  *        type: object
  *        properties:
  *          _id:
+ *              type: string
  *              example: 5e4a36bc64824b1f80b730cd
  *          email:
  *              type: string
@@ -39,23 +40,31 @@ const traineeRouter = Router();
  *              type: string
  *              example: trainee
  *          originalId:
+ *              type: string
  *              example: 5e4a36bc64824b1f80b730cd
  *          createdBy:
+ *              type: string
  *              example: 5e45404398e86d576ad964e6
  *          createdAt:
+ *              type: string
  *              example: 2020-02-20T11:33:39.325Z
  *          v:
- *              example:0
+ *              type: number
+ *              example: 0
  *      Unauthorized:
  *        type: object
  *        properties:
  *          error:
+ *              type: string
  *              example: Unauthorized
  *          message:
+ *              type: string
  *              example: Token not found
  *          status:
+ *              type: number
  *              example: 403
  *          timestamp:
+ *               type: string
  *               example: 2020-11-25T17:34:37.066Z
  *
  */
@@ -103,8 +112,10 @@ traineeRouter.route('/')
  *         schema:
  *              properties:
  *                  status:
+ *                      type: string
  *                      example: 200 OK
  *                  message:
+ *                      type: string
  *                      example: 'successfully fetched Trainee'
  *                  Count:
  *                      type: number
@@ -147,8 +158,10 @@ traineeRouter.route('/')
  *              oneOf:
  *              properties:
  *                  status:
+ *                      type: string
  *                      example: OK
  *                  message:
+ *                      type: string
  *                      example: Trainee Created Successfully
  *                  data:
  *                      type: object
@@ -197,8 +210,10 @@ traineeRouter.route('/')
  *              oneOf:
  *              properties:
  *                  status:
+ *                      type: string
  *                      example: OK
  *                  message:
+ *                      type: string
  *                      example: successfully upddate
  *                  data:
  *                      type: object
@@ -236,10 +251,13 @@ traineeRouter.route('/')
  *              oneOf:
  *              properties:
  *                  status:
+ *                      type: string
  *                      example: OK
  *                  message:
+ *                      type: string
  *                      example: Trainee deleted successfully!
  *                  code:
+ *                      type: number
  *                      example: 200
  *       403:
  *         description: unauthorised access

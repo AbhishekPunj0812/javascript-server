@@ -15,13 +15,13 @@ export default () => {
         userRepository.create({
           role: 'head-trainer',
           email: 'vinay.chaudhary@successive.tech',
-          password: 'Abhi@123'
+          password: config.Password
         }, undefined);
         userRepository.create({
           name: 'Abhishek Punj',
           role: 'trainee',
           email: 'abhishek.punj@successive.tech',
-          password: '12345'
+          password: config.Password
         }, undefined);
       }
     })

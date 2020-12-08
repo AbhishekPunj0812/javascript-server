@@ -38,10 +38,13 @@ const userRouter: Router = Router();
  *           type: object
  *           properties:
  *               status:
+ *                   type: string
  *                   example: Ok
  *               message:
+ *                   type: string
  *                   example: Authorization Token
  *               data:
+ *                    type: string
  *                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5laGEuZ29lbEBzdWNjZXNzaXZlLnRlY2giLCJpZCI6IjVlNGEzNmJjNjQ4MjRiMWY4MGI3MzBjZCIsImlhdCI6MTU4MjU0OTIyN30.cFV6YYlfmhJ1yL3GyIIgb-PjMTpDNVICd5KGi1ENpVI
  */
 
@@ -68,16 +71,6 @@ userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationH
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: skip
- *         description: Number of elements to skip
- *         in: query
- *         required: false
- *         type: number
- *       - name: limit
- *         description: number of elements to show
- *         in: query
- *         required: false
- *         type: number
  *     responses:
  *       200:
  *         description: success
@@ -116,11 +109,14 @@ userRouter.route('/me')
  *          oneOf:
  *          properties:
  *              status:
+ *                  type: number
  *                  example: "200"
  *              message:
+ *                  type: string
  *                  example: Password does not match
  *              err:
- *              example: Password is incorrect
+ *                  type: string
+ *                  example: Password is incorrect
  */
 
 userRouter.route('/login')
