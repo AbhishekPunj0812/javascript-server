@@ -12,19 +12,37 @@ const userRouter: Router = Router();
  *      me:
  *        type: object
  *        properties:
+ *          data:
+ *              _id:
+ *                  type: string
+ *                  example: 5fc0831e23a1643be0d2317c
+ *              email:
+ *                  type: string
+ *                  example: abhi.punj@successive.tech
+ *              name:
+ *                  type: string
+ *                  example: Abhi Punj
+ *              role:
+ *                  type: string
+ *                  example: Trainee
+ *              originalId:
+ *                  type: string
+ *                  example: 5fc0831e23a1643be0d2317c
+ *              createdBy:
+ *                  type: string
+ *                  example: 5fbdf53ac2f34b17040e4663
+ *              createdAt:
+ *                  type: string
+ *                  example: 2020-11-27T04:39:58.761Z
+ *              _v:
+ *                  type: number
+ *                  example: 0
  *          message:
  *              type: string
  *              example: Me
  *          status:
  *              type: string
  *              example: OK
- *          data:
- *              iss: Online JWT Builder
- *              iat: 1605048360
- *              exp: 1636584360
- *              name: skldjf
- *              email: skldjf@successive.tech
- *              role: trainee
  *      Login:
  *        type: object
  *        properties:
@@ -70,7 +88,6 @@ userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationH
  *       - Bearer: []
  *     produces:
  *       - application/json
- *     parameters:
  *     responses:
  *       200:
  *         description: success
@@ -79,7 +96,7 @@ userRouter.route('/:id').delete(authMiddleware('getUser', 'delete'), validationH
  */
 
 userRouter.route('/me')
-.get(authMiddleware('getUser', 'read'), validationHandler(validation.get), UserController.me);
+.get(authMiddleware('getUser', 'read'), UserController.me);
 /**
  * @swagger
  *
@@ -113,7 +130,7 @@ userRouter.route('/me')
  *                  example: "200"
  *              message:
  *                  type: string
- *                  example: Password does not match
+ *                  example: Password or email does not match
  *              err:
  *                  type: string
  *                  example: Password is incorrect

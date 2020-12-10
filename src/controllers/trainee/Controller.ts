@@ -140,6 +140,7 @@ class TraineeController {
         const updator = req.user._id;
             try {
               const result = await this.userRepository.updateUser(id, dataToUpdate, updator);
+              console.log('asasa', result);
               if (result !== undefined) {
                 res.status(200).send({
                   message: 'Trainee Updated Successfully',
@@ -149,7 +150,7 @@ class TraineeController {
                 });
               }
               else {
-                res.send(404).send( {
+                res.status(404).send( {
                   message: 'Record not found',
                   code: 404
                 });

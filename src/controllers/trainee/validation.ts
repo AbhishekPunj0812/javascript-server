@@ -1,15 +1,15 @@
 const config = {
   create:
   {
-  id: {
-  required: true,
-  string: true,
-  in: ['body'],
-  custom(): (value: any) => void {
-  console.log( 'value' );
-  throw { error: 'Error Occured', message: 'Message' };
-  }
-  },
+  // id: {
+  // required: true,
+  // string: true,
+  // in: ['body'],
+  // custom(): (value: any) => void {
+  // console.log( 'value' );
+  // throw { error: 'Error Occured', message: 'Message' };
+  // }
+  // },
   name: {
   required: true,
   string: true,
@@ -49,7 +49,6 @@ const config = {
   },
   dataToUpdate:
 { in: ['body'],
-  number: true,
   required: true,
   isObject: true,
   // tslint:disable-next-line:no-empty

@@ -146,11 +146,11 @@ traineeRouter.route('/')
  *     parameters:
  *       - name: User
  *         description: Data of users.
- *         in: query
+ *         in: body
  *         required: true
  *         type: object
  *         schema:
- *             $ref: '#/definitions/TraineeCreate'
+ *             $ref: '#/definitions/TraineePost'
  *     responses:
  *       200:
  *         description: User Created Successfully
@@ -176,7 +176,7 @@ traineeRouter.route('/')
  *         schema:
  *              $ref: '#/definitions/Unauthorized'
  */
-    .post(authMiddleware('getUser', 'write'), validationHandler( validation.create ), TraineeController.create)
+    .post(authMiddleware('getUser', 'write'), validationHandler(validation.create), TraineeController.create)
 /**
  * @swagger
  *
@@ -192,7 +192,7 @@ traineeRouter.route('/')
  *     parameters:
  *       - name: User
  *         description: Data of users.
- *         in: query
+ *         in: body
  *         required: true
  *         type: object
  *         schema:
