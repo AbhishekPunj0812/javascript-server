@@ -42,7 +42,6 @@ class UserController {
         });
       }
     }
-	
     create = async(req: IRequest, res: Response, next: NextFunction) => {
       const { id, email, name, role, password } = req.body;
       const creator = req.user._id;
@@ -100,7 +99,7 @@ class UserController {
                 const token = jwt.sign({
                     id: result._id,
                     email: result.email
-                }, config.SECRET_KEY);
+                }, config.SECRET_KEY, {expiresIn: '15m'});
                 console.log( token );
                 res.status(200). send( {
                     message: 'Authorization Token',
@@ -108,15 +107,15 @@ class UserController {
                 });
             }
             else {
-              res.send ( {
-                  message: "password doesn't match",
-                  status: 400
+              res.status(422).send ( {
+                  message: 'password or email doesnt match',
+                  status: 422
               });
             }
           } else {
-                res.send ( {
-                  message: ' Email is not registered ',
-                  status: 404
+                res.status(422).send ( {
+                  message: ' password or email doesnt match ',
+                  status: 422
                 });
               }
 
@@ -132,7 +131,8 @@ class UserController {
 
 
     me (req: IRequest, res: Response, next: NextFunction) {
-        res.json(req.user);
+      delete req.user.password;
+      res.json({ data: req.user, status: 200, message: 'Me'});
     }
 
 

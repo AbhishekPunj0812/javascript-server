@@ -14,7 +14,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     }
 
     public count(query: any) {
-        return this.model.countDocuments(query);
+        return this.model.countDocuments({...query, deletedAt: undefined});
     }
 
     public findOne(query: object) {
@@ -45,8 +45,9 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
 
         try {
                 let originalData;
-                const data =   await this.findOne({ _id: id, updatedAt: undefined, deletedAt: undefined });
-                    if (data === null) {
+                const data =   await this.findOne({ originalId: id, updatedAt: undefined, deletedAt: undefined });
+                console.log(data);
+                if (data === null) {
                         throw 'Record Not Found';
                     }
                     originalData = data;
@@ -67,9 +68,9 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
 
                 const res = await this.model.updateOne({ _id: oldId }, oldModel);
                         if (res === null) {
-                            throw 'Unable to update';
+                            return undefined;
                         }
-                    this.model.create(newData);
+                        return this.model.create(newData);
             }
 
             catch (err) {
@@ -81,7 +82,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         let originalData;
 
         try {
-            const data = await this.findOne({ id: ( id ), deletedAt: undefined }).lean();
+            const data = await this.findOne({ originalId: id , deletedAt: undefined }).lean();
             if (data === null) {
                 throw 'Record not found';
             }
@@ -95,13 +96,12 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             deletedBy: remover,
             };
 
-            const res = await this.model.updateOne({ _id: oldId }, modelDelete);
-                if (res === null) {
-                    throw 'Unable to Update';
-                }
+             return await this.model.updateOne({ _id: oldId }, modelDelete);
+
         }
         catch (err) {
              console.log('Error: ', err);
         }
     }
+
 }
