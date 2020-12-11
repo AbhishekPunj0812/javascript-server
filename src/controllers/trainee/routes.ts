@@ -198,9 +198,11 @@ traineeRouter.route('/')
  *         schema:
  *          oneOf:
  *          properties:
- *              dataToUpdate:
+ *              id:
  *                  type: string
  *                  example: 5e4e6e93c095d84d34045a30
+ *              dataToUpdate:
+ *                  type: object
  *                  allOf:
  *                      - $ref: '#/definitions/TraineePost'
  *     responses:

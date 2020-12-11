@@ -99,7 +99,7 @@ class UserController {
                 const token = jwt.sign({
                     id: result._id,
                     email: result.email
-                }, config.SECRET_KEY);
+                }, config.SECRET_KEY, {expiresIn: '15m'});
                 console.log( token );
                 res.status(200). send( {
                     message: 'Authorization Token',

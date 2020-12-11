@@ -37,7 +37,8 @@ export default ( config ) => ( req: Request, res: Response, next: NextFunction  
           }
       }
       if (obj.isObject) {
-          if ( ! ( typeof ( values ) === 'object' ) ) {
+          console.log('isObject', values);
+          if ( ! ( typeof ( paramvalue ) === 'object' ) ) {
               errors.push({
                   message: `${key} Should be an object`,
                   status: 404
